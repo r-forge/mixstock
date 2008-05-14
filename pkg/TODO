@@ -1,0 +1,34 @@
+
+
+- add flexibility to MM plots
+- work on package vignette
+- clean up/fix CML estimates; test UML estimates further (??)
+- establish testing directory, regression tests
+- many to many:
+   * run various timing tests 
+   * faster approach?  MCMCpack or explore
+      doing Gibbs sampling in C code???
+- BUGS/WinBUGS interface
+- JAGS interface???
+- clean up redundant simulations etc. (recreate figures from Bolker et al 2003?)
+- Tcl/Tk interface? Web interface??
+- fix up/test convergence testing
+- add confidence intervals to turtle.est objects
+     (within fit, or as a separate component)
+- memory constraints with MCMC: 
+    - allow/figure out thinning
+    - read/write to/from files?
+        - run chains, save to file: don't
+              re-run for each test, etc..
+             
+        If file is specified, look for runs saved to file
+        (as  foo.i.bot, foo.i.frq): read these, possibly
+        seeking to the right point in the chain to start
+
+      e.g. Raftery and Lewis calculation can add to file,
+              starting from end point
+         G & R can use these files, and add to them if necessary
+
+          estimates can use existing files
+           (objects may store resamples in file or in memory)
+

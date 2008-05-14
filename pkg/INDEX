@@ -1,0 +1,63 @@
+addlabels.barplot       add labels to a barplot
+AIC.mixstock.est        commands for mixed stock analysis estimates
+as.mcmc.bugs            convert from R2WinBUGS to CODA format
+as.mixstock.data        class for marker data from sources and mixed
+                        stocks
+as.mixstock.est.bugs    Convert BUGS or CODA objects to mixstock
+                        estimate object
+blockdiag               Block diagonal matrices
+bolten98                Loggerhead turtle data from Bolten 1998
+BUGS.out                generate MCMC output in BUGS format
+calc.GR                 Run chains and calculate Gelman and Rubin
+                        diagnostics for mixed stock analyses
+calc.mult.GR            Calculate Gelman and Rubin diagnostic multiple
+                        times for mixed stock analyses
+calc.RL.0               Use Raftery and Lewis diagnostics to calculate
+                        MCMC chain lengths
+cml                     Mixed stock analysis by conditional maximum
+                        likelihood
+coef.toptim             minimal structure for optim fits
+expand.bugs.data        convert data to BUGS input format
+genboot                 Generate bootstrap estimates of mixed stock
+                        analyses
+get.bot                 Masuda-Pella interchange functions
+gibbsC                  Run mixed stock analysis Gibbs sampler, in C
+gibbsmat                Plot Gibbs sampler output
+hwdiag.check            check Heidelberger and Welch diagnostic results
+lahanas98               Green turtle data from Lahanas et al. 1998
+loglik2.C               likelihood calculation, in C
+markfreq.condense       condense marker frequency list
+marknames               Extract/assign names from mixed stock data
+mcmc.chainlength.est    Estimate appropriate chain length for mixed
+                        stock analysis by MCMC
+mixstock.boot           Bootstrap samples of mixed stock analysis data
+mixstock.est            construct (or print) a mixed stock analysis
+                        estimate object
+mm.wbugs                Run many-to-many model via WinBUGS
+mysum                   summaries of MCMC output
+nmark                   Set and query mixed stock parameters
+normcols                scale columns to frequencies
+numderiv                take the numeric derivative of a function
+packval                 Pack and unpack contribution and marker
+                        frequencies
+p.bayes                 Empirical Bayes estimate of prior strength for
+                        source marker frequencies
+plot.mixstock.est       plot mixed stock analysis estimates
+pm.wbugs                Run Pella-Masuda model via WinBUGS
+q.to.p                  Real-to-multifrequency transformation
+rdirichlet              Dirichlet deviates
+runsims                 Run mixed stock simulations
+simex                   A small sample mixed stock analysis data set
+simmixstock0            Simulate a sample from sources and mixed stock
+simmixstock1            Simulate marker frequencies and distributions
+                        in a mixed stock
+simmixstock2            Simulate multiple mixed stocks
+sourcesize.wbugs        Run hierarchical model with via WinBUGS
+startvec0               Produce (raw) starting vector of parameters for
+                        mixed stock analysis
+tmcmc                   Mixed stock analysis by Markov Chain Monte
+                        Carlo
+uml                     Mixed stock analysis by unconditional maximum
+                        likelihood
+uml.lik                 Likelihoods and gradients of stock analysis
+                        models

@@ -1,0 +1,148 @@
+% \VignetteIndexEntry{basic examples of mixed stock analysis}
+\documentclass[11pt]{article}
+\usepackage{palatino}
+\usepackage[american]{babel}
+\newcommand{\R}{{\sf R}}
+\newcommand{\Splus}{{\sf S-PLUS}}
+%\newcommand{\fixme}[1]{\textbf{FIXME: #1}}
+\newcommand{\fixme}[1]{}
+\usepackage{url}
+\usepackage{alltt}
+\bibliographystyle{plain}
+
+\newcommand{\Rver}{2.4.1}
+\title{Mixed stock analysis in R: getting started with the {\tt mixstock}
+package}
+\author{Ben Bolker}
+\date{\today}
+\usepackage{/usr/share/R/share/texmf/Sweave}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+The {\tt mixstock} package is a set of routines
+written in the \R\ language
+\cite{Rmanual} for doing mixed stock
+analysis using
+data on markers gathered
+from source populations and from one or more mixed populations.
+The package was developed for
+analyzing mitochondrial DNA (mtDNA) markers from
+sea turtle populations, but should be applicable
+to any case with discrete sources, discrete mixed
+populations, and discrete markers.
+(However, I do refer to sources as ``rookeries''
+and markers as ``haplotypes'' throughout this document.)
+The package is intended to be self-contained,
+but some familiarity with \R\ or \Splus\ will
+be helpful.  (Some familiarity with your
+computer's operating system, which is probably
+Microsoft Windows, is also assumed.)
+The statistical methods implemented in the
+package are described in \cite{bolk+03c} and
+\cite{PellMasu01}.
+
+\textbf{This package is in the public domain (GNU General Public
+License), is \textcopyright 2007 Ben Bolker and
+Toshinori Okuyama,
+and comes with NO WARRANTY.  Please suggest improvements to
+me (Ben Bolker) at {\tt bolker@zoo.ufl.edu}.}
+
+If you are feeling impatient and confident, turn to
+``Quick Start'' (section~\ref{sec:quickstart}).
+
+\section{Installation}
+You can skip this section if you are reading this
+file via the {\tt vignette()} command in \R --- that
+means you've already successfully installed the
+package.
+
+To get started, you will have to download and
+install the \R\ package, a general-purpose
+statistics and graphics package, from
+\url{http://cran.us.r-project.org/bin/windows/base/}
+if you are in the US
+(or see \url{http://www.r-project.org/mirrors.html} for a list of alternative
+``mirror sites'' closer to you).
+You will download a file called {\tt R-x.y.z-win32.exe}
+which will install \R\ for you, when executed; {\tt x.y.z}
+stands for the current version of \R\ \Rver\ as of \today).
+
+The following installation instructions assume
+you are using a ``modern'' Microsoft Windows system
+(tested on 2000 and XP); it is possible to use
+\R, and the {\tt mixstock} package, on other
+operating systems --- please contact the
+authors for more information. 
+(The package has been developed under Linux and runs under
+Windows; most of it should run under MacOS as well, but
+it is not as well supported and you will have to build
+the package from sources.   To run hierarchical models using
+WinBUGS, you need to have WINE set up on Linux; I'm not
+sure about MacOS.)
+The setup file is about 17M, and 
+\R\ takes up about 40M of disk space.
+If you are running an antivirus package that is configured to check
+the signatures of executable files before they run, make sure you turn
+it off or register the new files installed by \R\ before proceeding.
+You may also have some difficulty downloading packages if you have
+a firewall running on your computer --- if you have trouble,
+you may want to (temporarily, at your own risk!) disable it.
+
+Once you have downloaded and installed \R,
+start the \R\ program.  The setup program
+should have asked whether you want to add a shortcut
+to the desktop or the Start menu: if
+you didn't, you will have to search for a file
+called {\tt Rgui.exe}, which probably lives somewhere
+like {\tt Program Files\\R\\R-\Rver\\bin} depending
+on what version of \R\ you are using and where
+you decided to install it.
+\R\ will open up a window for you with a command
+prompt ({\verb+>+}), at which you can type
+\R\ commands.  (Don't panic.)
+
+You can exit \R\ by selecting {\tt File/Exit} from
+the menus, or by typing {\tt q()} at the command prompt.
+In general, if you want help on a particular command
+(e.g. {\tt uml}) you can type a question mark
+followed by the command name (e.g. {\tt ?uml})
+
+You will next need to install the {\tt mixstock}
+package and two other auxiliary packages, over
+the WWW, from within \R\ (you will need to
+maintain a connection to the internet for this
+piece, although it is also possible to do
+this step off-line).
+Within \R, at the command prompt, type the
+following commands:
+\begin{Schunk}
+\begin{Sinput}
+> install.packages("mixstock")
+> install.packages("plotrix")
+> install.packages("coda")
+> install.packages("abind")
+> install.packages("R2WinBUGS")
+\end{Sinput}
+\end{Schunk}
+
+In each case, answer {\tt y} to whether you want to delete
+the source files; you won't need them again.
+The first command specifies the location of the
+{\tt mixstock} package
+(the other packages all come from the default source for \R\ packages).
+The {\tt install.packages} commands download and
+install packages.
+
+(If you don't have a convenient internet connection,
+you can also download the .zip files corresponding
+to the different packages and install them by going
+to the Packages menu within R and choosing
+{\tt Install from local zip file}.)
+
+\section{Loading the {\tt mixstock} package and reading  in data}
+Start every session with the {\tt mixstock} package by
+typing 
+\begin{Schunk}
+\begin{Sinput}
+> library(mixstock)

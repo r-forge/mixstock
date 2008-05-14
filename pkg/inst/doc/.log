@@ -1,0 +1,36 @@
+This is e-TeX, Version 3.14159-2.1 (Web2C 7.4.5) (format=latex 2005.10.17)  26 OCT 2005 13:05
+entering extended mode
+**turtle-vignetee
+(/usr/share/texmf/tex/latex/tools/.tex
+! Interruption.
+<to be read again> 
+                   \begingroup 
+l.1 
+    %%
+? 
+LaTeX2e <2001/06/01>
+Babel <v3.7h> and hyphenation patterns for american, french, ngerman, dutch, no
+hyphenation, catalan, irish, icelandic, swedish, loaded.
+File ignored)
+*
+(Please type a command or say `\end')
+*\end
+
+*
+Runaway argument?
+! Paragraph ended before \end was complete.
+<to be read again> 
+                   \par 
+<*> 
+    
+? X
+ 
+Here is how much of TeX's memory you used:
+ 5 strings out of 95606
+ 126 string characters out of 1192949
+ 44721 words of memory out of 1000001
+ 3102 multiletter control sequences out of 10000+50000
+ 3640 words of font info for 14 fonts, out of 500000 for 1000
+ 126 hyphenation exceptions out of 1000
+ 5i,0n,1p,95b,8s stack positions out of 1500i,500n,5000p,200000b,5000s
+No pages of output.

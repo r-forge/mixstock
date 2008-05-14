@@ -1,0 +1,44 @@
+model {
+for(i in 1:(Tm[1])) {
+   mixsamp1[i,1:H] ~ dmulti(pi[Z1[i],],1);
+   Z1[i] ~ dcat(theta[1,1:R]);
+}
+for(i in 1:(Tm[2])) {
+   mixsamp2[i,1:H] ~ dmulti(pi[Z2[i],],1);
+   Z2[i] ~ dcat(theta[2,1:R]);
+}
+for(i in 1:(Tm[3])) {
+   mixsamp3[i,1:H] ~ dmulti(pi[Z3[i],],1);
+   Z3[i] ~ dcat(theta[3,1:R]);
+}
+# model for pi (the multinomial parameter)
+for(i in 1:R){sourcesamp[i,1:H] ~ dmulti(pi[i,1:H],T[i])}
+for(i in 1:R){T[i] <- sum(sourcesamp[i,])}
+for(j in 1:R){pi[j,1:H] ~ ddirch(beta[j,])
+for(k in 1:H){beta[j,k] <- fp[k]}}
+
+for(j in 1:R){
+for(k in 1:(MIX+1)) {
+	div[j,k] <- delta[j,k]/sum(delta[j,])
+	delta[j,k] ~ dgamma(dp[k],1)
+}
+}
+
+for(i in 1:R){   DERIV[1,i] <- div[i,1]*sourcesize[i]
+   DERIV[2,i] <- div[i,2]*sourcesize[i]
+   DERIV[3,i] <- div[i,3]*sourcesize[i]
+}
+
+for(i in 1:MIX){
+   mixsize[i] <- sum(DERIV[i,])
+   rmixsize[i] <- mixsize[i]/sum(mixsize[])
+}
+
+for(j in 1:MIX){
+   for(i in 1:R){
+      theta[j,i] <- DERIV[j,i]/sum(DERIV[j,])
+   }
+}
+
+for(i in 1:(MIX+1)){dp[i] <- 1}
+}

@@ -1,0 +1,97 @@
+CFLAGS=-g -Wall -DRCODE
+#LIBDIR=/home/ben/lib
+#CODEDIR=${LIBDIR}/code
+#RANDDIR=${LIBDIR}/code/randlib.c/src
+#INCLUDE = -I/home/ben/include
+LIBDIR=.
+CODEDIR=.
+RANDDIR=.
+INCLUDE=-I .
+
+AMOBJ =    ran.o amoeba.o amotry.o nrutil.o
+
+# metropolizing amoeba
+# amebsa.o amotsa.o 
+
+
+R-turtlefuns: turtle-am2.o turtle-funs.o ran.o r250.o metrop.o vecutils.o ran.o utils.o \
+        ${AMOBJ} turtle-gibbs.o rdirich.o ${RANDDIR}/randlib.o
+	R SHLIB -o turtle.so turtle-am2.o turtle-funs.o r250.o metrop.o vecutils.o utils.o \
+	     ${AMOBJ} turtle-gibbs.o rdirich.o \
+             ${RANDDIR}/linpack.o ${RANDDIR}/randlib.o ${RANDDIR}/com.o
+
+R-oldfuns: turtle-am2.o turtle-funs.o ran.o r250.o metrop.o vecutils.o ran.o utils.o \
+        ${AMOBJ} turtle-gibbs-old.o rdirich.o ${RANDDIR}/randlib.o
+	R SHLIB -o oldfuns.so turtle-am2.o turtle-funs.o r250.o metrop.o vecutils.o utils.o \
+	     ${AMOBJ} turtle-gibbs-old.o rdirich.o \
+             ${RANDDIR}/linpack.o ${RANDDIR}/randlib.o ${RANDDIR}/com.o
+
+R-testfun: testmem.o
+	R SHLIB -o testmem.so testmem.o
+
+R-amoeba: turtle-am2.o turtle-funs.o ran.o r250.o metrop.o vecutils.o ran.o utils.o \
+        ${AMOBJ}
+	R SHLIB turtle-am2.o turtle-funs.o r250.o metrop.o vecutils.o utils.o \
+             ${AMOBJ}
+
+turtleam: turtle-am2.o turtle-funs.o ran.o r250.o metrop.o vecutils.o ran.o utils.o \
+        ${AMOBJ}
+	gcc ${INCLUDE} -o turtleam turtle-am2.o turtle-funs.o r250.o metrop.o vecutils.o utils.o \
+             ${AMOBJ} -lm
+
+turtlemc: turtle-mc.o turtle-funs.o ran.o r250.o metrop.o vecutils.o utils.o
+	gcc -o turtlemc turtle-mc.o turtle-funs.o ran.o r250.o metrop.o vecutils.o utils.o -lm
+
+R-gibbs: turtle-gibbs.o vecutils.o rdirich.o utils.o ${RANDDIR}/randlib.o
+	 R SHLIB turtle-gibbs.o vecutils.o rdirich.o utils.o ${RANDDIR}/linpack.o ${RANDDIR}/randlib.o ${RANDDIR}/com.o
+
+turtle-gibbs: turtle-gibbs.o vecutils.o rdirich.o utils.o
+	gcc ${CFLAGS} ${INCLUDE} -o turtle-gibbs turtle-gibbs.o vecutils.o rdirich.o utils.o ${LIBDIR}/randlib.a -lm
+
+turtle-gibbs.o: turtle-gibbs.c
+	gcc -c ${CFLAGS} ${INCLUDE} turtle-gibbs.c
+
+turtle-gibbs-old.o: turtle-gibbs-old.c
+	gcc -c ${CFLAGS} ${INCLUDE} turtle-gibbs-old.c
+
+turtle-am2.o: turtle-am2.c
+	gcc -c ${CFLAGS} ${INCLUDE} turtle-am2.c
+
+rdirich.o: rdirich.c
+	gcc -c ${INCLUDE} rdirich.c
+
+turtle-funs.o: turtle-funs.c
+	gcc ${CFLAGS} -c ${INCLUDE} turtle-funs.c
+
+vecutils.o: ${CODEDIR}/vecutils.c
+	gcc -c ${CODEDIR}/vecutils.c
+
+utils.o: ${CODEDIR}/utils.c
+	gcc -c ${CODEDIR}/utils.c
+
+amoeba.o: ${CODEDIR}/amoeba.c
+	gcc ${CFLAGS} -c ${INCLUDE} ${CODEDIR}/amoeba.c
+
+amotsa.o: ${CODEDIR}/amotsa.c
+	gcc -c ${INCLUDE}  ${CODEDIR}/amotsa.c
+
+amebsa.o: ${CODEDIR}/amebsa.c
+	gcc -c ${INCLUDE}  ${CODEDIR}/amebsa.c
+
+amotry.o: ${CODEDIR}/amotry.c
+	gcc ${CFLAGS} -c ${INCLUDE}  ${CODEDIR}/amotry.c
+
+nrutil.o: ${CODEDIR}/nrutil.c
+	gcc -c ${INCLUDE}  ${CODEDIR}/nrutil.c
+
+r250.o: ${CODEDIR}/r250.c
+	gcc -c ${CODEDIR}/r250.c
+
+ran.o: ${CODEDIR}/ran.c
+	gcc ${INCLUDE} -c ${CODEDIR}/ran.c
+
+turtle-rand: turtle-rand.c
+	gcc $(CFLAGS) $(INCLUDE) -o turtle-rand turtle-rand.c ${LIBDIR}/randlib.a -lm
+
+tstmid: tstmid.c
+	gcc $(CFLAGS) $(INCLUDE) -o tstmid tstmid.c /home/ben/lib/randlib.a -lm
