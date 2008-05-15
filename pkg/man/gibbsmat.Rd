@@ -4,7 +4,7 @@
 \alias{plotvar}
 \title{Plot Gibbs sampler output}
 \description{
-  
+   plot or report on output from Gibbs sampler  
 }
 \usage{
 gibbsmat(x, burnin = 500, R = 2, H = 2, trans = TRUE)

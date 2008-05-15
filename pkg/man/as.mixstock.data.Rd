@@ -12,10 +12,9 @@
 }
 \usage{
 as.mixstock.data(object,nmix=1,sourcesize)
-plot.mixstock.data(x,prop = TRUE,
-legend = TRUE, colors = rainbow(x$H), 
+\method{plot}{mixstock.data}(x,prop = TRUE, legend = TRUE, colors = rainbow(x$H), 
     leg.space = 0.3, leg.ncol, leg.cex=1, mix.off = 0.5,
-    stacklabels=FALSE, horiz=TRUE, ...)
+    stacklabels=FALSE, sampsize=FALSE, horiz=TRUE, ...)
 \method{print}{mixstock.data}(x,\dots)
 
 }
@@ -34,6 +33,7 @@ legend = TRUE, colors = rainbow(x$H),
   \item{leg.cex}{character size for legend}
   \item{mix.off}{spacing offset for bar(s) representing mixed stock(s)}
   \item{stacklabels}{(logical) put source names on multiple lines?}
+  \item{sampsize}{(logical) add text showing sample sizes?}
   \item{nmix}{number of mixed stocks (default 1)}
   \item{sourcesize}{either a numeric vector of relative source sizes, or
     "first" or "last" to specify that the first or last row

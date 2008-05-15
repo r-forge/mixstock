@@ -13,15 +13,14 @@
   stock analysis estimates
 }
 \usage{
-AIC.mixstock.est(object, ...)
-boxplot.mixstock.est(x,...)
-as.mixstock.est(object)
-coef.mixstock.est(object,...)
-logLik.mixstock.est(object,...)
-confint.mixstock.est(object,parm,level=0.95,profile=FALSE,
-type=c("quantile","credible"),
-show.sourcectr=TRUE,show.haps=FALSE,...)
+\method{AIC}{mixstock.est}(object, \dots)
+\method{boxplot}{mixstock.est}(x,\dots)
+\method{coef}{mixstock.est}(object,\dots)
+\method{logLik}{mixstock.est}(object,\dots)
+\method{confint}{mixstock.est}(object,parm,level=0.95,profile=FALSE,type=c("quantile","credible"),
+show.sourcectr=TRUE,show.haps=FALSE,\dots)
 \method{summary}{mixstock.est}(object,\dots)
+as.mixstock.est(object)
 }
 \arguments{
   \item{object}{mixed stock analysis estimate}

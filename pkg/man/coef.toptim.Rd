@@ -7,8 +7,8 @@
   for optim fits
 }
 \usage{
-coef.toptim(object, ...)
-logLik.toptim(object,...)
+\method{coef}{toptim}(object,\dots)
+\method{logLik}{toptim}(object,\dots)
 }
 \arguments{
   \item{object}{the result of an optim fit}

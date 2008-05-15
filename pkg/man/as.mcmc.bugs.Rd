@@ -5,7 +5,7 @@
   converts output of R2WinBUGS to standard CODA format
 }
 \usage{
-as.mcmc.bugs(x)
+\method{as.mcmc}{bugs}(x)
 }
 \arguments{
   \item{x}{an object of class \code{bugs},

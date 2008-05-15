@@ -6,14 +6,13 @@
   with 95\% confidence limites
 }
 \usage{
-plot.mixstock.est(x, plot.freqs = FALSE,
-sourcectr=FALSE, contrib.lab = "Estimated source contributions",
-sourcefreq.lab = "Estimated source marker freqs",
-markcolors = rainbow(x$H),
-alength=0.25,
-aunits="inches",
-abbrev,
-...)
+\method{plot}{mixstock.est}(x, plot.freqs = FALSE,
+   sourcectr=FALSE, contrib.lab = "Estimated source contributions",
+   sourcefreq.lab = "Estimated source marker freqs",
+   markcolors = rainbow(x$H),
+   alength=0.25,
+   aunits="inches",
+   abbrev,\dots)
 }
 \arguments{
   \item{x}{mixstock estimate}
@@ -32,7 +31,7 @@ abbrev,
 \note{
   The \code{\dots} argument can contain a great number of
   optional arguments to \code{barplot}: see \code{\link{barplot}}
-  and \code{\link{xyplot}}.  Among many others, one can specify
+  and \code{xyplot} (in the \code{lattice} package).  Among many others, one can specify
   (for example) \code{scale=list(x=list(cex=0.6),y=list(log=TRUE))}
   for smaller labels on the horizontal axis and a log scale on
   the vertical axis; \code{layout=c(3,5)} to change the number
