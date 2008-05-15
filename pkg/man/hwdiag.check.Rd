@@ -12,8 +12,6 @@ hwdiag.check(x, verbose = FALSE)
   \item{x}{the results of a model fit?}
   \item{verbose}{verbose output?}
 }
-\details{
-}
 \value{
   logical: true or false
 }

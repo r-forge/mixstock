@@ -21,6 +21,6 @@
 }
 \source{Bolten et al. 1998}
 \examples{
-data(bolten98)
+  data(bolten98)
 }
 \keyword{datasets}

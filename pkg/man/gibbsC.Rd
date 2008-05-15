@@ -32,7 +32,9 @@ contrun=FALSE,contrib.start=NULL,sourcefreq.start=NULL)
   \item{sourcefreq.start}{matrix of starting source freqs}
 }
 \value{
-
+  a numeric matrix containing samples from the chain:
+  each row is a vector of estimated contribution frequencies
+  from each rookery
 }
 \note{gibbsC calls C code to generate multinomial deviates
   derived from the randlib.c library

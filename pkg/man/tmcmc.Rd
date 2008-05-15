@@ -43,16 +43,11 @@ gibbs(sourcesamp, mixsamp, a = 1, startiter, maxiter, startfval = NULL,
   \item{maxiter}{max. number of iterations}
   \item{startfval}{starting source contributions}
 }
-\details{
-}
 \value{
    Returns an object of type \code{mixstock.est}
 }
 \references{Masuda and Pella}
 \author{Ben Bolker}
-\note{}
-\seealso{}
-
 \examples{
   data(bolten98)
   b98c <- markfreq.condense(as.mixstock.data(bolten98))

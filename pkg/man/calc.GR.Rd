@@ -30,6 +30,4 @@ calc.GR(data, tot=20000, burn=1, verbose=FALSE, rseed=1001,
   Returns the diagnostic from the CODA function
 }
 \author{Ben Bolker}
-\examples{
-}
 \keyword{misc}
