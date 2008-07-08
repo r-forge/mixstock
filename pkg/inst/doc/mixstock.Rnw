@@ -1,22 +1,27 @@
 % \VignetteIndexEntry{basic examples of mixed stock analysis}
 \documentclass[11pt]{article}
 \usepackage{palatino}
+\usepackage{lineno}
 \usepackage[american]{babel}
 \newcommand{\R}{{\sf R}}
 \newcommand{\Splus}{{\sf S-PLUS}}
 %\newcommand{\fixme}[1]{\textbf{FIXME: #1}}
 \newcommand{\fixme}[1]{}
+\newcommand{\windows}{\textbf W?}
 \usepackage{url}
 \usepackage{alltt}
+\newcommand{\code}[1]{{\tt #1}}
 \bibliographystyle{plain}
 
-\newcommand{\Rver}{2.4.1}
+\newcommand{\Rver}{2.7.1}
 \title{Mixed stock analysis in R: getting started with the {\tt mixstock}
 package}
 \author{Ben Bolker}
 \date{\today}
 \begin{document}
 \maketitle
+
+\linenumbers
 
 \section{Introduction}
 The {\tt mixstock} package is a set of routines
@@ -31,10 +36,14 @@ sea turtle populations, but should be applicable
 to any case with discrete sources, discrete mixed
 populations, and discrete markers.
 (However, I do refer to sources as ``rookeries''
-and markers as ``haplotypes'' throughout this document.)
+and markers as ``haplotypes'' throughout this document,
+and you will see other echoes of its origins, e.g.
+the number of markers is internally
+stored as variable \code{H} and the number of sources is 
+stored as \code{R}.)
 The package is intended to be self-contained,
 but some familiarity with \R\ or \Splus\ will
-be helpful.  (Some familiarity with your
+definitely be helpful.  (Some familiarity with your
 computer's operating system, which is probably
 Microsoft Windows, is also assumed.)
 The statistical methods implemented in the
@@ -42,7 +51,7 @@ package are described in \cite{bolk+03c} and
 \cite{PellMasu01}.
 
 \textbf{This package is in the public domain (GNU General Public
-License), is \textcopyright 2007 Ben Bolker and
+License), is \textcopyright 2008 Ben Bolker and
 Toshinori Okuyama,
 and comes with NO WARRANTY.  Please suggest improvements to
 me (Ben Bolker) at {\tt bolker@zoo.ufl.edu}.}
@@ -52,20 +61,27 @@ If you are feeling impatient and confident, turn to
 
 \section{Installation}
 You can skip this section if you are reading this
-file via the {\tt vignette()} command in \R --- that
+file via the \code{vignette()} command in \R --- that
 means you've already successfully installed the
 package.
 
 To get started, you will have to download and
 install the \R\ package, a general-purpose
 statistics and graphics package, from
-\url{http://cran.us.r-project.org/bin/windows/base/}
-if you are in the US
-(or see \url{http://www.r-project.org/mirrors.html} for a list of alternative
-``mirror sites'' closer to you).
-You will download a file called {\tt R-x.y.z-win32.exe}
+CRAN (the ``Comprehensive R Archive Network'');
+go to \url{http://www.r-project.org} and navigate
+from there\footnote{if you are in
+the US and using Windows, you can go directly to
+\url{http://cran.us.r-project.org/bin/windows/base/}:
+you will need to download a file called {\tt R-x.y.z-win32.exe}
 which will install \R\ for you, when executed; {\tt x.y.z}
 stands for the current version of \R\ \Rver\ as of \today).
+Otherwise, see
+\url{http://www.r-project.org/mirrors.html} for a list of alternative
+``mirror sites'' closer to you and navigate through the
+web pages to find a version to install (if you are not
+using Unix and/or an expert, you will want to look for
+a \emph{binary} version of R).}
 
 The following installation instructions assume
 you are using a ``modern'' Microsoft Windows system
@@ -124,17 +140,12 @@ install.packages("R2WinBUGS")
 @ 
 
 In each case, answer {\tt y} to whether you want to delete
-the source files; you won't need them again.
-The first command specifies the location of the
-{\tt mixstock} package
-(the other packages all come from the default source for \R\ packages).
-The {\tt install.packages} commands download and
-install packages.
+the source files; you shouldn't need them again.
 
 (If you don't have a convenient internet connection,
 you can also download the .zip files corresponding
 to the different packages and install them by going
-to the Packages menu within R and choosing
+to the \code{Packages} menu within R and choosing
 {\tt Install from local zip file}.)
 
 \section{Loading the {\tt mixstock} package and reading  in data}
@@ -154,8 +165,8 @@ is that each row of data represents a haplotype, each column except
 the last represents samples from a particular rookery, and the last
 column is the samples from the mixed population.  Each row and column
 should be named; your life will be simpler if the names do not have
-spaces or punctuation other than periods in them (a common convention
-in \R\ is to replace spaces with periods, e.g. {\tt North.FL} for
+spaces or punctuation other than periods in them (a common \R\ convention
+is to replace spaces with periods, e.g. {\tt North.FL} for
 "North FL").  Do not label the haplotype column; \R\ detects the
 presence of column names by checking whether the first row has one
 fewer item than the rest of the rows in the file.
@@ -169,7 +180,9 @@ could look like this:
 H1 1 2 3 4
 H2 3 4 5 6
 \end{verbatim}
-Or a comma-separated file could look like this:
+Or a comma-separated file could look like this
+(note that the first line has only 4 elements while
+subsequent lines have 5).
 \begin{verbatim}
 R1,R2,R3,mix
 H1,1,2,3,4
@@ -190,31 +203,49 @@ H2,3,4,5,6,0
 To read in your data,
 you first need to make sure that \R\ knows how to
 find them.
-The best thing to do is to use the {\tt File/Change working directory}
-option under the file menu to move to a directory you
+The easiest thing to do is to use the
+menu options\footnote{{\tt File/Change working directory}
+on Windows, {\tt Misc/Change working directory} or Apple-D
+on MacOS}
+to move to a directory (i.e., folder) you
 will use for analysis, which should contain the data
 files you want to use and will contain \R's working files.
+You can use the \code{getwd()} (get working directory)
+command to see where you are, and
+\code{list.files()} to list the files in the current
+directory.
 %You can also specify the whole path to the data files
 %(e.g. \verb+My Documents\turtlestuff\turtledata.csv+),
 %or move your data files to \R's default working directory.
 Once you have changed to the appropriate directory,
 you can read in your data files and assign the
-data to a variable (for example) {\tt mydata}:
+data to a variable.
+For example, if you had a file 
+with space-separated data called
+\code{mydata.dat}, you could it read it in 
+by typing
 <<eval=FALSE>>=
-mydata <- read.table("lahanas98.dat")
+mydata = read.table("mydata.dat")
 @ 
-if you
-are using space-separated data, or 
+and if you
+have a comma-separated file called
+\code{mydata.csv} you can use
 <<eval=FALSE>>=
-mydata <- read.csv("myturtles.csv")
+mydata = read.csv("mydata.csv")
 @ 
-if you have comma-separated values.
+(You must specify the \emph{extension} of the
+file --- the letters after the dot.  Sometimes
+your operating system will hide that information
+from you.)
 
-Here I'll use the {\tt lahanas98raw}
-data that comes with the package:
+If you have your own data you can read it in
+now and follow along, or you can use the
+\code{lahanas98raw}
+data set that comes with the package
+\cite{Laha+98}:
 <<>>=
 data(lahanas98raw)
-mydata <- lahanas98raw
+mydata = lahanas98raw
 @ 
 
 To make sure that everything came out OK, type
@@ -228,20 +259,24 @@ head(mydata)
 @ 
 to print out just the first few lines, as shown above.
 
-Next, convert your data to a form that the {\tt mixstock}
-package can use with the \verb+as.mixstock.data+ command:
+Next, use the \code{as.mixstock.data} command
+to convert your data to a form that the package can use:
 <<>>=
-mydata <- as.mixstock.data(mydata)
+mydata = as.mixstock.data(mydata)
 @ 
 
-Once your data are converted to {\tt mixstock.data} form,
-you can produce a summary plot of the data
-with {\tt plot(mydata)} (Figure~1).
+Once your data are converted in this way,
+you can use \code{plot(mydata)} to
+produce a summary plot of the data
+(Figure~\ref{fig:data1}).
 \begin{figure}
 <<echo=FALSE,fig=TRUE>>=
 plot(mydata,mix.off=2)
 @
-\caption{Basic plot of turtle mtDNA haplotype data.}
+\caption{Basic plot of turtle mtDNA haplotype data,
+using \code{plot(mydata,mix.off=2)}
+(\code{mix.off=2} leaves a slightly larger space
+between the rookery and mixed stock data)}
 \label{fig:data1}
 \end{figure}
 
@@ -255,14 +290,15 @@ more information.}
 
 Before proceeding, you will need to ``condense'' your data
 set by (1) excluding any haplotype samples that are found only in the
-mixed population (which will break some estimation methods, and
+mixed population (such ``singleton'' haplotypes
+will break some estimation methods, and
 provide no useful information on turtle origins) and (2) lumping
 together all haplotypes that are found only in a single rookery and
 the mixed population (distinguishing among such haplotypes provides no
 extra information in our analyses, and may slow down estimation).
 You can do this by typing
 <<>>=
-mydata <- markfreq.condense(mydata)
+mydata = markfreq.condense(mydata)
 @ 
 (To examine the condensed form of the data,
 you can print them by typing \verb+mydata+ at
@@ -277,11 +313,11 @@ using the {\tt data()} command.
 data(lahanas98)
 @ 
 makes the haplotype frequency data from Lahanas et al. 1998
-\cite{Laha+98} available as variable {\tt lahanas98}.
+\cite{Laha+98} available as variable {\tt lahanas98}, while
 <<>>=
 data(bolten98)
 @ 
-gives you the loggerhead data from Bolten et al. 1998
+makes the loggerhead data from Bolten et al. 1998
 \cite{Bolt+98} available as {\tt bolten98},
 already converted and condensed: {\tt bolten98raw}
 gives you the raw table.
@@ -290,24 +326,36 @@ gives you the raw table.
 <<echo=FALSE,fig=TRUE>>=
 plot(lahanas98,mix.off=2)
 @
-\caption{Condensed haplotype data from Lahanas 1998}
+\caption{Condensed haplotype data from Lahanas 1998;
+\code{plot(lahanas98,mix.off=2)}
+\textbf{to do: fix legend spacing}}
 \label{fig:condensed}
 \end{figure}
 
 \section{Stock analysis}
-Various methods of stock analysis are available.
+You can use the \code{mixstock} package to
+run various mixed-stock analyses on your data.
 
 \subsection{Conditional and unconditional maximum likelihood}
 You can do standard conditional maximum likelihood
 (CML) analysis using \verb+cml(mydata)+.
+\textbf{to do: citations}
 If you want to save the results, you can save them
 as a variable that you can then print, plot, etc.
 (Figure~\ref{fig:cml1})
 <<>>=
-mydata.cml <- cml(mydata)
+mydata.cml = cml(mydata)
 mydata.cml
 @ 
 
+Assigning the results of \code{cml} to a variable
+doesn't produce any output; you need to type
+the name of the variable to get the answers
+to print out.
+
+Plotting the data produces a simple plot
+of the estimated contributions from each
+source (with no error bars): see Figure~\ref{fig:cml1}.
 <<eval=FALSE>>=
 plot(mydata.cml)
 @ 
@@ -316,7 +364,8 @@ plot(mydata.cml)
 <<fig=TRUE,echo=FALSE>>=
 plot(mydata.cml)
 @ 
-\caption{CML estimates for Lahanas 1998 data}
+\caption{CML estimates for Lahanas 1998 data;
+\code{plot(mydata.cml)}}
 \label{fig:cml1}
 \end{figure}
 When you print CML results, \R\ will tell you there is no estimate for
@@ -332,18 +381,20 @@ for the vertical axis, use
 {\tt plot(mydata.cml,log="y")}).
 
 Standard unconditional maximum likelihood analysis (UML)
-takes a little longer, but is equally straightforward:
+takes a little longer, but is equally straightforward
+(\textbf{todo: citations})
 <<>>=
-mydata.uml <- uml(mydata)
+mydata.uml = uml(mydata)
 @ 
 
 UML estimates also include estimates of the true
 haplotype frequencies in each rookery, which are
 printed with the contribution estimates 
-(print these results by typing {\tt mydata.uml} on a line by
+(as before, print these results by typing \code{mydata.uml} 
+on a line by
 itself).
 As with CML, you can plot the results with
-{\tt plot(mydata.uml)}; by default this plot
+\code{plot(mydata.uml)}; by default this plot
 includes just the rookery contribution
 information.
 You can include the estimated haplotype
@@ -353,26 +404,28 @@ par(ask=TRUE)
 plot(mydata.uml,plot.freqs=TRUE)
 par(ask=FALSE)
 @ 
-(The {\tt par} commands tell \R\ to wait
-for user input, or not, between successive plots.)
+(\code{par(ask=TRUE)} tells \R\ to wait
+for user input between successive plots).
 
 \subsection{Confidence intervals:
 CML and UML bootstrapping}
 <<eval=FALSE>>=
-mydata.umlboot <- genboot(mydata,"uml")
+mydata.umlboot = genboot(mydata,"uml")
 @
 <<echo=FALSE>>=
 if (!file.exists("umlboot.RData")) {
-  mydata.umlboot <- genboot(mydata,"uml")
-  save("mydata.umlboot",file="umlboot.RData",compress=TRUE)
+  t1 <- system.time(mydata.umlboot <- genboot(mydata,"uml"))
+  save("t1","mydata.umlboot",file="umlboot.RData",compress=TRUE)
 } else load("umlboot.RData")
 @ 
 will generate standard (nonparametric)
 bootstrap confidence intervals for
-a UML fit to {\tt mydata}, by resampling
+a UML fit to \code{mydata}, by resampling
 the data with replacement 1000 times (by default).
-\emph{This is fairly slow with a realistic size
-data set.}
+\emph{This is slow with a realistic size
+data set: it took \Sexpr{round(t1[1]/60,1)}
+minutes to run 1000 bootstrap samples
+on my laptop.}
 (You can ignore warnings about {\tt singular matrix, returning
 equal contribs}, {\tt Error in qr.solve}, etc..)
 You can find out the results by typing
@@ -384,13 +437,13 @@ confint(mydata.umlboot)
 <<fig=TRUE,echo=FALSE>>=
 plot(mydata.umlboot)
 @ 
-\caption{UML estimates with bootstrap confidence limits for Lahanas 1998 data}
+\caption{UML estimates with bootstrap confidence limits for Lahanas 1998 data: \code{plot(mydata.umlboot)}}
 \label{fig:umlboot}
 \end{figure}
 
 \subsection{Markov Chain Monte Carlo estimation}
 <<eval=FALSE>>=
-mydata.mcmc <- tmcmc(mydata)
+mydata.mcmc = tmcmc(mydata)
 @ 
 <<echo=FALSE>>=
 if (!file.exists("mcmc.RData")) {
@@ -518,7 +571,7 @@ and the proportional contributions of each
 rookery to each mixed stock:
 
 <<fig=TRUE>>=
-Z <- simmixstock2(nsource=4,nmark=5,nmix=3,
+Z = simmixstock2(nsource=4,nmark=5,nmix=3,
                  sourcesize=c(4,2,1,1),
                  sourcesampsize=rep(25,4),
                  mixsampsize=rep(30,3),rseed=1001)               
@@ -528,7 +581,7 @@ plot(Z)
 
 <<echo=FALSE>>=
 if (.Platform$OS.type=="unix") {
-  WINE <- system("locate wine | grep bin/wine$", intern = TRUE)[2]
+  WINE = system("locate wine | grep bin/wine$", intern = TRUE)[2]
   Sys.putenv(WINE=WINE)
 }
 @ 
@@ -543,12 +596,12 @@ if (!file.exists("wbugs_cache.RData")) {
 } else load("wbugs_cache.RData")
 @ 
 <<eval=FALSE>>=
-Zfit <- mm.wbugs(Z,sourcesize=c(4,2,1,1))
+Zfit = mm.wbugs(Z,sourcesize=c(4,2,1,1))
 @ 
 
 Or, keeping the run in BUGS format for diagnostic purposes:
 <<eval=FALSE>>=
-Zfit0 <- mm.wbugs(Z,sourcesize=c(4,2,1,1),returntype="bugs")
+Zfit0 = mm.wbugs(Z,sourcesize=c(4,2,1,1),returntype="bugs")
 @ 
 
 This takes about \Sexpr{round(st1[3]/60,1)} minutes to run with the
@@ -638,7 +691,7 @@ program; and run the setup program).
 download and install the {\tt mixstock}
 package and auxiliary packages:
 <<eval=FALSE>>=
-bbcontrib <- "http://www.zoo.ufl.edu/bolker/R/windows"
+bbcontrib = "http://www.zoo.ufl.edu/bolker/R/windows"
 install.packages("mixstock",contriburl=bbcontrib)
 install.packages("plotrix")
 install.packages("coda")
@@ -653,12 +706,12 @@ below, loading the package, needs to be done for every new R session.)
 \item{Load data from a comma-separated value (CSV) file,
 convert to proper format, and condense haplotypes:
 <<eval=FALSE>>=
-mydata <- hapfreq.condense(as.mixstock.data(read.csv("myfile.dat")))
+mydata = hapfreq.condense(as.mixstock.data(read.csv("myfile.dat")))
 @
 } 
 \item{analyze, e.g:
 <<eval=FALSE>>=
-mydata.mcmc <- tmcmc(mydata)
+mydata.mcmc = tmcmc(mydata)
 mydata.mcmc
 intervals(mydata.mcmc)
 plot(mydata.mcmc)
