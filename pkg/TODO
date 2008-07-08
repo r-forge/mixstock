@@ -1,5 +1,8 @@
 
 
+- print contributions as <0.001?
+- add as.data.frame.mixstock.data
+- onepage/ask flags for multi-page plots
 - add flexibility to MM plots
 - work on package vignette
 - clean up/fix CML estimates; test UML estimates further (??)
