@@ -1,3 +1,13 @@
+ 0.9.1 2008/08/18
+
+ minor vignette improvements
+  use layout() for legends, check for text truncation
+  added R2jags support
+  tweaked manymany.txt for R2jags/WinBUGS compatibility
+  changed "manymany.bug" call to "manymany.txt" call 
+    to work around R2WinBUGS attempt to write to system dir
+  added silent=TRUE to several try() clauses
+
 
 0.9, 2008/05/14   version bump for move to r-forge
 

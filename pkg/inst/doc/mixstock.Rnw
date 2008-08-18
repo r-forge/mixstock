@@ -14,8 +14,8 @@
 \bibliographystyle{plain}
 
 \newcommand{\Rver}{2.7.1}
-\title{Mixed stock analysis in R: getting started with the {\tt mixstock}
-package}
+\title{Mixed stock analysis in R: getting started with the 
+  \code{mixstock} package}
 \author{Ben Bolker}
 \date{\today}
 \begin{document}
@@ -24,7 +24,7 @@ package}
 \linenumbers
 
 \section{Introduction}
-The {\tt mixstock} package is a set of routines
+The \code{mixstock} package is a set of routines
 written in the \R\ language
 \cite{Rmanual} for doing mixed stock
 analysis using
@@ -73,8 +73,8 @@ go to \url{http://www.r-project.org} and navigate
 from there\footnote{if you are in
 the US and using Windows, you can go directly to
 \url{http://cran.us.r-project.org/bin/windows/base/}:
-you will need to download a file called {\tt R-x.y.z-win32.exe}
-which will install \R\ for you, when executed; {\tt x.y.z}
+you will need to download a file called \code{R-x.y.z-win32.exe}
+which will install \R\ for you, when executed; \code{x.y.z}
 stands for the current version of \R\ \Rver\ as of \today).
 Otherwise, see
 \url{http://www.r-project.org/mirrors.html} for a list of alternative
@@ -86,7 +86,7 @@ a \emph{binary} version of R).}
 The following installation instructions assume
 you are using a ``modern'' Microsoft Windows system
 (tested on 2000 and XP); it is possible to use
-\R, and the {\tt mixstock} package, on other
+\R, and the \code{mixstock} package, on other
 operating systems --- please contact the
 authors for more information. 
 (The package has been developed under Linux and runs under
@@ -109,21 +109,21 @@ start the \R\ program.  The setup program
 should have asked whether you want to add a shortcut
 to the desktop or the Start menu: if
 you didn't, you will have to search for a file
-called {\tt Rgui.exe}, which probably lives somewhere
-like {\tt Program Files\\R\\R-\Rver\\bin} depending
+called \code{Rgui.exe}, which probably lives somewhere
+like \code{Program Files\\R\\R-\Rver\\bin} depending
 on what version of \R\ you are using and where
 you decided to install it.
 \R\ will open up a window for you with a command
 prompt ({\verb+>+}), at which you can type
 \R\ commands.  (Don't panic.)
 
-You can exit \R\ by selecting {\tt File/Exit} from
-the menus, or by typing {\tt q()} at the command prompt.
+You can exit \R\ by selecting \code{File/Exit} from
+the menus, or by typing \code{q()} at the command prompt.
 In general, if you want help on a particular command
-(e.g. {\tt uml}) you can type a question mark
-followed by the command name (e.g. {\tt ?uml})
+(e.g. \code{uml}) you can type a question mark
+followed by the command name (e.g. \code{?uml})
 
-You will next need to install the {\tt mixstock}
+You will next need to install the \code{mixstock}
 package and two other auxiliary packages, over
 the WWW, from within \R\ (you will need to
 maintain a connection to the internet for this
@@ -139,23 +139,23 @@ install.packages("abind")
 install.packages("R2WinBUGS")
 @ 
 
-In each case, answer {\tt y} to whether you want to delete
+In each case, answer \code{y} to whether you want to delete
 the source files; you shouldn't need them again.
 
 (If you don't have a convenient internet connection,
 you can also download the .zip files corresponding
 to the different packages and install them by going
 to the \code{Packages} menu within R and choosing
-{\tt Install from local zip file}.)
+\code{Install from local zip file}.)
 
-\section{Loading the {\tt mixstock} package and reading  in data}
-Start every session with the {\tt mixstock} package by
+\section{Loading the \code{mixstock} package and reading  in data}
+Start every session with the \code{mixstock} package by
 typing 
 <<>>=
 library(mixstock)
 @ 
 at the command prompt;
-this loads the {\tt mixstock} and auxiliary packages.
+this loads the \code{mixstock} and auxiliary packages.
 
 The package can read plain text data files that are separated by white
 space (spaces and/or tabs) or commas.  If your data are in Microsoft
@@ -166,14 +166,14 @@ the last represents samples from a particular rookery, and the last
 column is the samples from the mixed population.  Each row and column
 should be named; your life will be simpler if the names do not have
 spaces or punctuation other than periods in them (a common \R\ convention
-is to replace spaces with periods, e.g. {\tt North.FL} for
+is to replace spaces with periods, e.g. \code{North.FL} for
 "North FL").  Do not label the haplotype column; \R\ detects the
 presence of column names by checking whether the first row has one
 fewer item than the rest of the rows in the file.
 
 For example, a plain text file (with
-haplotype labels {\tt H1} and {\tt H2}
-and rookery labels {\tt R1}--{\tt R3})
+haplotype labels \code{H1} and \code{H2}
+and rookery labels \code{R1}--\code{R3})
 could look like this:
 \begin{verbatim}
   R1 R2 R3 mix
@@ -204,8 +204,8 @@ To read in your data,
 you first need to make sure that \R\ knows how to
 find them.
 The easiest thing to do is to use the
-menu options\footnote{{\tt File/Change working directory}
-on Windows, {\tt Misc/Change working directory} or Apple-D
+menu options\footnote{\code{File/Change working directory}
+on Windows, \code{Misc/Change working directory} or Apple-D
 on MacOS}
 to move to a directory (i.e., folder) you
 will use for analysis, which should contain the data
@@ -271,21 +271,23 @@ produce a summary plot of the data
 (Figure~\ref{fig:data1}).
 \begin{figure}
 <<echo=FALSE,fig=TRUE>>=
-plot(mydata,mix.off=2)
+plot(mydata,mix.off=2,leg.space=0.35)
 @
 \caption{Basic plot of turtle mtDNA haplotype data,
-using \code{plot(mydata,mix.off=2)}
+using \code{plot(mydata,mix.off=2,leg.space)}
 (\code{mix.off=2} leaves a slightly larger space
-between the rookery and mixed stock data)}
+between the rookery and mixed stock data,
+while \code{leg.space=0.35} leaves more room
+for the legend)}
 \label{fig:data1}
 \end{figure}
 
 The default plot is a barplot, with the proportions of each haplotype
 sampled in each rookery represented by a separate bar; the mixed
 population data are shown as the rightmost bar.\footnote{you can
-change from the default colors by specifying a {\tt colors=} argument:
-e.g. if you have 10 haplotypes, {\tt colors=topo.colors(10)} or
-{\tt colors=gray((0:9)/9)}. See {\tt ?gray} or {\tt ?rainbow} for
+change from the default colors by specifying a \code{colors=} argument:
+e.g. if you have 10 haplotypes, \code{colors=topo.colors(10)} or
+\code{colors=gray((0:9)/9)}. See \code{?gray} or \code{?rainbow} for
 more information.}
 
 Before proceeding, you will need to ``condense'' your data
@@ -308,18 +310,18 @@ the graphical summary [Figure~\ref{fig:condensed}].)
 
 Some data are already entered in the package
 in the condensed format; you can access them
-using the {\tt data()} command.
+using the \code{data()} command.
 <<>>=
 data(lahanas98)
 @ 
 makes the haplotype frequency data from Lahanas et al. 1998
-\cite{Laha+98} available as variable {\tt lahanas98}, while
+\cite{Laha+98} available as variable \code{lahanas98}, while
 <<>>=
 data(bolten98)
 @ 
 makes the loggerhead data from Bolten et al. 1998
-\cite{Bolt+98} available as {\tt bolten98},
-already converted and condensed: {\tt bolten98raw}
+\cite{Bolt+98} available as \code{bolten98},
+already converted and condensed: \code{bolten98raw}
 gives you the raw table.
 
 \begin{figure}
@@ -378,11 +380,12 @@ points specifying the estimated
 proportions of the mixed population contributed by each
 rookery (to plot this with a logarithmic scale
 for the vertical axis, use
-{\tt plot(mydata.cml,log="y")}).
+\code{plot(mydata.cml,log="y")}).
 
 Standard unconditional maximum likelihood analysis (UML)
 takes a little longer, but is equally straightforward
-(\textbf{todo: citations})
+\cite{SWT90}:
+
 <<>>=
 mydata.uml = uml(mydata)
 @ 
@@ -426,8 +429,8 @@ the data with replacement 1000 times (by default).
 data set: it took \Sexpr{round(t1[1]/60,1)}
 minutes to run 1000 bootstrap samples
 on my laptop.}
-(You can ignore warnings about {\tt singular matrix, returning
-equal contribs}, {\tt Error in qr.solve}, etc..)
+(You can ignore warnings about \code{singular matrix, returning
+equal contribs}, \code{Error in qr.solve}, etc..)
 You can find out the results by typing
 <<>>=
 confint(mydata.umlboot)
@@ -485,6 +488,7 @@ The command
 <<eval=FALSE>>=
 diag1=calc.RL.0(mydata)
 @ 
+(The final character is the numeral 0, not the letter O).
 
 <<echo=FALSE>>=
 if (!file.exists("RL.RData")) {
@@ -509,7 +513,7 @@ the ``burn-in'' period (a transient that is discarded);
 the total number of iterations required; a lower bound
 on the total number required; and a ``dependence factor''
 that tells how much correlation  there is between subsequent
-values in the chain (see {\tt ?raftery.diag} for more
+values in the chain (see \code{?raftery.diag} for more
 information).  Here are the first few lines
 of \verb+diag1$current+:
 <<>>=
@@ -551,19 +555,36 @@ to be judged to have converged properly.
 
 \section{Hierarchical models}
 
-To install {\tt WinBUGS}, go to
-\url{http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/contents.shtml}
-and follow the instructions there to download and install {\tt WinBUGS} version 1.4
-and get a license key.  Then make sure that you've installed
-the {\tt R2WinBUGS} package.
+To run hierarchical models, you will need to use either
+\code{WinBUGS} (on Windows, or on Linux or MacOS via a
+program called WINE, or some sort of Windows
+emulator) or \code{JAGS} (a newer, less well-tested
+program, but one that runs more easily on a variety of
+platforms).
 
-You can use the {\tt pm.wbugs()} command (with the same syntax
-as {\tt tmcmc} above) to run basic mixed stock analysis.
-Use {\tt mm.wbugs()} to run many-to-many analyses.
+Brief installation instructions for these programs:
+\begin{itemize}
+  \item \code{WinBUGS}: go to
+    \url{http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/contents.shtml}
+    and follow the instructions there to download and install
+    \code{WinBUGS} version 1.4 and get a license key.  
+    Then make sure that you've installed the \code{R2WinBUGS} package
+    (\code{install.packages("R2WinBUGS")})
+  \item \code{JAGS}: go to \url{http://www-fis.iarc.fr/~martyn/software/jags/}
+    and download the appropriate version for your computer. Then install 
+    \code{R2jags} (\code{install.packages("R2jags",repos="http://r-forge.r-project.org")}) (\emph{hopefully \code{R2jags} will be rolled into \code{R2WinBUGS} 
+      shortly, eliminating a little bit of complexity and the need to 
+      download and install a development version of the package})
+  \end{itemize}
+    You can use the \code{pm.wbugs()} command (with the same syntax
+    as \code{tmcmc} above) to run basic mixed stock analysis.
+    Use \code{mm.wbugs()} to run many-to-many analyses, with
+    \code{R2WinBUGS} (default, \code{pkg="WinBUGS"}) or \code{JAGS} 
+    (\code{pkg="JAGS"}).
 
 \subsection{Many-to-many analysis}
 
-The {\tt simmixstock2} command does basic simulation
+The \code{simmixstock2} command does basic simulation
 of multiple-mixed-stock systems.  At its simplest,
 it simply generates random uniform values for
 the haplotype frequencies in each rookery
@@ -579,14 +600,17 @@ Z
 plot(Z)
 @ 
 
-<<echo=FALSE>>=
+<<echo=FALSE,eval=FALSE>>=
+## hope this isn't necessary any more?
+## causes warnings on CRAN
 if (.Platform$OS.type=="unix") {
   WINE = system("locate wine | grep bin/wine$", intern = TRUE)[2]
-  Sys.putenv(WINE=WINE)
+  Sys.setenv(WINE=WINE)
+  Sys.setenv(WINE="/home/ben/cxoffice/bin/wine") ## mine
 }
 @ 
 
-Now try to fit this via {\tt mm.wbugs}:
+Now try to fit this via \code{mm.wbugs}:
 <<echo=FALSE,cache=TRUE>>=
 if (!file.exists("wbugs_cache.RData")) {
   st0 <- system.time(Zfit0 <- mm.wbugs(Z,sourcesize=c(4,2,1,1),returntype="bugs"))
@@ -595,8 +619,13 @@ if (!file.exists("wbugs_cache.RData")) {
   save("st0","st1","st2","Zfit","Zfit2","Zfit0",file="wbugs_cache.RData")
 } else load("wbugs_cache.RData")
 @ 
-<<eval=FALSE>>=
-Zfit = mm.wbugs(Z,sourcesize=c(4,2,1,1))
+
+<<eval=FALSE,echo=FALSE>>=
+## tests
+st3 <- system.time(Zfit0 <- mm.wbugs(Z,sourcesize=c(4,2,1,1),
+                                     bugs.code="BB",pkg="JAGS"))
+Zfit2 <- mm.wbugs(Z,sourcesize=c(4,2,1,1),bugs.code="BB",n.iter=200)
+Zfit3 <- mm.wbugs(Z,sourcesize=c(4,2,1,1),bugs.code="BB",n.iter=1000,pkg="JAGS")
 @ 
 
 Or, keeping the run in BUGS format for diagnostic purposes:
@@ -608,43 +637,43 @@ This takes about \Sexpr{round(st1[3]/60,1)} minutes to run with the
 default settings, which run 4 chains (equal to the number of
 sources) for 20,000 steps each.
 (There are two different versions of the BUGS code that can
-be used with {\tt mm.wbugs}; in this particular case they
+be used with \code{mm.wbugs}; in this particular case they
 give relatively similar answers and take about the same amount
-of time ({\tt bugs.code="BB"} took \Sexpr{round(st2[3]/60,1)} minutes), 
+of time (\code{bugs.code="BB"} took \Sexpr{round(st2[3]/60,1)} minutes), 
 but if you're having trouble you might try switching
-from the default {\tt bugs.code="TO"} to {\tt bugs.code="BB"}.
+from the default \code{bugs.code="TO"} to \code{bugs.code="BB"}.
 
-Other important options when running {\tt mm.wbugs} are:
+Other important options when running \code{mm.wbugs} are:
 \begin{itemize}
-\item {\tt n.iter}: the default is 20,000 iterations per chain, with
-  the first half used as burn-in ({\tt n.burnin=floor(n.iter/2)});
+\item \code{n.iter}: the default is 20,000 iterations per chain, with
+  the first half used as burn-in (\code{n.burnin=floor(n.iter/2)});
   this may be conservative, and could take a long time with
   realistically large data sets.  Use CODA's diagnostics as
-  described above ({\tt raftery.diag}, {\tt gelman.diag}, etc.)
+  described above (\code{raftery.diag}, \code{gelman.diag}, etc.)
   to figure out an appropriate number of iterations.
-\item {\tt n.chains}: equal to the number of sources by default,
+\item \code{n.chains}: equal to the number of sources by default,
   which may again be overkill.  (\cite{Bolker+07} used three chains
   for an 11-source problem.)
-\item {\tt inittype}: {\tt "dispersed"} starts the chains from 
+\item \code{inittype}: \code{"dispersed"} starts the chains from 
   a starting point where 95\% of the contributions are assumed to
-  come from a single source; {\tt "random"} starts the chains from
-  random starting points.  If {\tt which.init} is specified, these
+  come from a single source; \code{"random"} starts the chains from
+  random starting points.  If \code{which.init} is specified, these
   sources will be used as the dominant starting points: for example,
   {\tt mm.wbugs(...,n.chains=3,inittype="dispersed",which.init=c(1,5,7))} will 
   start 3~chains with dominant contributions from sources 1, 5, and 7.  If
-  {\tt which.init} is unspecified and {\tt n.chains} is less than the
+  \code{which.init} is unspecified and \code{n.chains} is less than the
   number of sources, dominant sources will be picked at random.
-\item {\tt returntype}: specifies what format to use for the answer.
-  The default is a {\tt mixstock.est} object that can be plotted
+\item \code{returntype}: specifies what format to use for the answer.
+  The default is a \code{mixstock.est} object that can be plotted
   or summarized like the results from any other mixed-stock analysis.
   However, for diagnostic purposes, it may be worth running the
-  code initially with {\tt returntype="bugs"}
-  and using {\tt as.mcmc.bugs} and {\tt as.mixstock.est.bugs}
+  code initially with \code{returntype="bugs"}
+  and using \code{as.mcmc.bugs} and \code{as.mixstock.est.bugs}
   to convert the result to either CODA format or mixstock
   format.  Plotting bugs format and CODA format gives different
   diagnostic plots; CODA format can also be used to run
-  convergence diagnostics such as {\tt raftery.diag} or
-  {\tt gelman.diag}.
+  convergence diagnostics such as \code{raftery.diag} or
+  \code{gelman.diag}.
 \end{itemize}
 
 Plots from many-to-many runs:
@@ -688,7 +717,7 @@ program; and run the setup program).
 }
 \item{Start \R.}
 \item{From within \R,
-download and install the {\tt mixstock}
+download and install the \code{mixstock}
 package and auxiliary packages:
 <<eval=FALSE>>=
 bbcontrib = "http://www.zoo.ufl.edu/bolker/R/windows"
@@ -699,10 +728,10 @@ install.packages("abind")
 install.packages("R2WinBUGS")
 @ 
 (This installation procedure needs to be done
-only once, although the {\tt library} command
+only once, although the \code{library} command
 below, loading the package, needs to be done for every new R session.)
 }
-\item{Load the package: {\tt library(mixstock)}}
+\item{Load the package: \code{library(mixstock)}}
 \item{Load data from a comma-separated value (CSV) file,
 convert to proper format, and condense haplotypes:
 <<eval=FALSE>>=
@@ -724,7 +753,7 @@ plot(mydata.mcmc)
 \item{read.csv/read.table + as.mixstock.data combined
 into a single read.mixstock.data command? (also incorporate
 hapfreq.condense as a default option)}
-\item{{\tt print.mixstock.est} could print sample frequencies instead of
+\item{\code{print.mixstock.est} could print sample frequencies instead of
 saying ``no estimate'' for CML}
 \item{MCMC section could be cleaned up considerably, explained better,
 R\&L parameters not hard-coded, more efficient --- don't
@@ -739,7 +768,7 @@ E-M algorithm}
 add unstacked/beside=TRUE option to plot.mixstock.est}
 \item incorporate source size data as part of data object
 \item some functions don't work with uncondensed data: fix or issue warning
-\item use {\tt HPDinterval} from CODA for confidence intervals,
+\item use \code{HPDinterval} from CODA for confidence intervals,
   rather than quantiles?
 \end{itemize}
 

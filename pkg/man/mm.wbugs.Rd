@@ -1,9 +1,10 @@
 \name{mm.wbugs}
 \alias{mm.wbugs}
 \alias{write.TO.bugscode}
-\title{Run many-to-many model via WinBUGS}
+\title{Run many-to-many model via WinBUGS (or JAGS)}
 \description{
-  Sets up the many-to-many model and passes it to WinBUGS via R2WinBUGS}
+  Sets up the many-to-many model and passes it to WinBUGS via R2WinBUGS
+  (or R2jags)}
 \usage{
 mm.wbugs(x, sourcesize,
 n.iter=20000,  n.burnin=floor(n.iter/2),
@@ -12,6 +13,7 @@ n.thin=max(1, floor(n.chains * (n.iter - n.burnin)/1000)),
 files.only = FALSE,
 inittype=c("dispersed","random"),bugs.code=c("TO","BB"),
                      returntype=c("mixstock","coda","bugs"),
+pkg=c("WinBUGS","JAGS"),
 mixprior=1,
 which.init,
 debug=FALSE,...)
@@ -50,6 +52,7 @@ write.TO.bugscode(fn,MIX)
   \item{MIX}{number of mixed stocks}
   \item{returntype}{return value as a \code{mixstock.est} object,
     a CODA object, or a BUGS object?}
+  \item{pkg}{which package to use for back-end calculations}
 }
 \value{
   results of WinBUGS run, as a \code{mixstock.est} object
@@ -61,6 +64,9 @@ write.TO.bugscode(fn,MIX)
   code initially with \code{returntype="bugs"}
   and using \code{as.mcmc.bugs} and \code{as.mixstock.est.bugs}
   to convert the result to either CODA format or mixstock
-  format.}
+  format.
+
+  pkg="JAGS" is still experimental.
+}
 \author{Ben Bolker}
 \keyword{misc}

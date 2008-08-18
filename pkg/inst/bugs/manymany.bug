@@ -23,8 +23,6 @@ model{
 ##    mixsize[m]: estimated mixed population size
 ##    rmixsize[m]: estimated relative mixed population size
 ##
-## sum samples for sources
-   for(i in 1:R){T[i] <- sum(sourcesamp[i,])}
 ## assign origins for mixed-sample individuals
    for (j in 1:MIX) {
       for(i in 1:Tm[j]){

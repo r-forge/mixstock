@@ -274,22 +274,30 @@ plot.mixstock.data <- function(x,prop=TRUE,legend=TRUE,
     M <- 1
   } else M <- ncol(x$mixsamp)
   if (prop) vals <- sweep(vals,2,ssize,"/")
-  if (!legend) leg.space <- 0
-  y.ht <- 1/(1-leg.space)
-  leg.bot <- 1.1
-  if (!prop) {
-    y.ht <- y.ht*max(vals)
-    leg.bot <- leg.bot*max(vals)
+  if (legend) {
+    if (horiz) {
+      layout(matrix(1:2,nrow=1,ncol=2),width=c(1,leg.space))
+    } else {
+      layout(matrix(2:1,nrow=2,ncol=1),height=c(leg.space,1))
+    }
+    ## if (!legend) leg.space <- 0
+    ## y.ht <- 1/(1-leg.space)
+    ## leg.bot <- 1.1
+    ## if (!prop) {
+    ## y.ht <- y.ht*max(vals)
+    ## leg.bot <- leg.bot*max(vals)
   }
   if (horiz) {
     op <- par(las=1)
     on.exit(par(op))
-    b <- barplot(as.matrix(vals),xlim=c(0,y.ht),axes=FALSE,col=colors,
+    b <- barplot(as.matrix(vals), ## xlim=c(0,y.ht),
+                 axes=FALSE,col=colors,
                  space=c(rep(0.2,R),mix.off,rep(0.2,M-1)),
                  horiz=TRUE,
                  names.arg=rep("",R+M),...)
   } else {
-    b <- barplot(as.matrix(vals),ylim=c(0,y.ht),axes=FALSE,col=colors,
+    b <- barplot(as.matrix(vals), ## ylim=c(0,y.ht),
+                 axes=FALSE,col=colors,
                  space=c(rep(0.2,R),mix.off,rep(0.2,M-1)),
                  horiz=FALSE,
                  names.arg=rep("",R+M),...)
@@ -303,13 +311,20 @@ plot.mixstock.data <- function(x,prop=TRUE,legend=TRUE,
   if (missing(leg.ncol)) {
     leg.ncol <- if (horiz) 1 else 3
   }
-  if (legend) {
-    legend(if (!horiz) "topleft" else "right",
-           marknames(x),fill=colors,ncol=leg.ncol,cex=leg.cex)
-  }
   if (sampsize) {
     mtext(side = if (!horiz) 3 else 4,         
           at=b,line=1,ssize)
+  }
+  if (legend) {
+    op <- par(xpd=NA,mar=rep(0,4),xaxs="i",yaxs="i")
+    on.exit(par(op))
+    plot(0:1,0:1,type="n",ann=FALSE,axes=FALSE)
+    L=legend(0:1,0:1, ## if (!horiz) "topleft" else "right",
+           marknames(x),fill=colors,ncol=leg.ncol,cex=leg.cex,
+      bty="n")
+    if ((horiz && any(L$text$x+strwidth(marknames(x))>1)) ||
+        (!horiz && any(L$text$y-strheight(marknames(x))<0)))
+      warning("some legend text may be truncated: increase leg.space?")
   }
 }
 
@@ -638,7 +653,7 @@ lsolve <- function(n,s,tol=1e-5,warn=FALSE) {
     warning("singular matrix, returning equal contribs")
     return(rep(1/R,R))
   }
-  m <- try(qr.solve(n,s,tol=tol))
+  m <- try(qr.solve(n,s,tol=tol),silent=TRUE)
   if (class(m)=="try-error") {
     if (warn) warning("solve failed, returning equal contribs")
     return(rep(1/R,R))
@@ -1479,7 +1494,7 @@ cml <- function(x,start.type="lsolve",
                  transf=transf,
                  lower=lower,
                  upper=upper,
-                 control=control,debug=debug,...))
+                 control=control,debug=debug,...),silent=TRUE)
   if ((!is.null(class(m))) && (class(m)=="try-error"))
     m <- list(coefficients=rep(NA,R-1),value=NA,convergence=NA)
   else class(m) <- "toptim"
@@ -1674,7 +1689,7 @@ uml.ds <- function(x,
                    debug=debug,
                    method=method,
                    lower=lower,upper=upper,
-                   control=control,...))
+                   control=control,...),silent=TRUE)
   } else {  ## ugly! without bounds for non-L-BFGS-B code
     m <- try(optim(par=start,
                    fn=uml.lik,
@@ -1683,7 +1698,7 @@ uml.ds <- function(x,
                    transf=transf,
                    debug=debug,
                    method=method,
-                   control=control,...))
+                   control=control,...),silent=TRUE)
 
   }
   if ((!is.null(class(m))) && (class(m) == "try-error")){
@@ -1959,9 +1974,11 @@ mm.wbugs <- function(x,
                      inittype=c("dispersed","random"),
                      bugs.code=c("TO","BB"),
                      returntype=c("mixstock","coda","bugs"),
+                     pkg=c("WinBUGS","JAGS"),
                      mixprior=1,
                      which.init,debug=FALSE,...) {
-  require("R2WinBUGS")
+  pkg <- match.arg(pkg)
+  switch(pkg,WinBUGS=require("R2WinBUGS"),JAGS=require("R2jags"))
   inittype <- match.arg(inittype)
   returntype <- match.arg(returntype)
   bugs.code <- match.arg(bugs.code)
@@ -1977,7 +1994,7 @@ mm.wbugs <- function(x,
       assign(paste("mixsamp",i,sep=""),expand.bugs.data(x$mixsamp[,i]))
     }
   } else {
-    mm.bugscode <- system.file(package = "mixstock", "bugs", "manymany.bug")
+    mm.bugscode <- system.file(package = "mixstock", "bugs", "manymany.txt")
     mixsamplist <- list("mixsamp")
     mixsamp <- expand.bugs.data(x$mixsamp)
     mixsamp ## codetools kluge
@@ -1999,7 +2016,8 @@ mm.wbugs <- function(x,
   dp <- mixprior
   dp <- rep(dp,length.out=MIX+1) ## replicate mixed prior if necessary
   c(fp,dp) ## codetools kluge
-  data <- c(list("Tm","sourcesamp","sourcesize","R","H","MIX","fp","dp"),
+  data <- c(list("Tm","sourcesamp","sourcesize","R","H","MIX","fp","dp",
+                 "T"),
             mixsamplist)
   parameters <- c("theta","div")
   ## initial values:
@@ -2042,11 +2060,20 @@ mm.wbugs <- function(x,
       ## pi = t(sourceprop.obs),
       ## TO DO: try adjusting hap freq start, or using one or the other
   } ## inittype != random
-  elapsed <- system.time(b1 <- bugs(data,inits,parameters,mm.bugscode,
-                                    n.chains=n.chains,
-                                    n.iter=n.iter,n.burnin=n.burnin,
-                                    n.thin=n.thin,
-                                    debug=debug,...))[3]
+  if (pkg=="WinBUGS") {
+    elapsed <- system.time(b1 <- bugs(data,inits,parameters,mm.bugscode,
+                                      n.chains=n.chains,
+                                      n.iter=n.iter,n.burnin=n.burnin,
+                                      n.thin=n.thin,
+                                      debug=debug,...))[3]
+  } else {
+    ## browser()
+    elapsed <- system.time(b1 <- jags(data,inits,parameters,mm.bugscode,
+                                      n.chains=n.chains,
+                                      n.iter=n.iter,n.burnin=n.burnin,
+                                      n.thin=n.thin,
+                                      ...)$BUGSoutput)[3]
+  }
   return(switch(returntype,
                 mixstock=as.mixstock.est.bugs(b1,data=x,time=elapsed),
                 coda=as.mcmc.bugs(b1),
@@ -2348,7 +2375,8 @@ as.mixstock.est.bugs <- function(object,data=NULL,time) {
   if (!is.null(object$sims.list$div)) {
     X$fit <- c(X$fit,list(sourcectr.freq=colMeans(object$sims.list$div)))
   }
-  X$resample <- object$sims.matrix[,1:(ncol(object$sims.matrix)-1)]
+  X$resample <- object$sims.matrix[,!colnames(object$sims.matrix) %in% "deviance"]
+  ##                                   1:(ncol(object$sims.matrix)-1)]
   X$resamplist <- object$sims.list
   X$R <- ncol(X$fit$input.freq)
   X$M <- nrow(X$fit$input.freq)
@@ -2370,8 +2398,8 @@ as.mixstock.est.bugs <- function(object,data=NULL,time) {
       dimnames(X$resample) <- list(NULL,
                                    c(t(outer(mnames,rnames,paste,sep=".")),
                                      t(outer(rnames,c(mnames,"Unk"),paste,sep="."))))
-      dimnames(X$resamplist[[1]]) <- list(NULL,mnames,rnames)
-      dimnames(X$resamplist[[2]]) <- list(NULL,rnames,c(mnames,"Unknown"))
+      dimnames(X$resamplist$theta) <- list(NULL,mnames,rnames)
+      dimnames(X$resamplist$div) <- list(NULL,rnames,c(mnames,"Unknown"))
     }
   }
   X

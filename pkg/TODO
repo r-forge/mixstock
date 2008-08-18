@@ -1,6 +1,11 @@
 
+  fix warnings in plotCI -- forward plotCI hack to Jim Lemon
+  progress bars
+  suppress warnings in boot?
+  diag1 : check variability/ hack vignette
+  par (ask)
 
-- print contributions as <0.001?
+- print contributions as <0.001? (with printCoefmat)
 - add as.data.frame.mixstock.data
 - onepage/ask flags for multi-page plots
 - add flexibility to MM plots

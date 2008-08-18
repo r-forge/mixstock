@@ -44,4 +44,18 @@ J.~Pella and M.~Masuda.
 \newblock R Foundation for Statistical Computing, Vienna, Austria, 2005.
 \newblock {ISBN} 3-900051-07-0.
 
+\bibitem{SWT90}
+P.~E. Smouse, R.~S. Waples, and J.~A. Tworek.
+\newblock A genetic mixture analysis for use with incomplete source population
+  data.
+\newblock {\em Canadian Journal of Fisheries and Aquatic Sciences},
+  47:620--634, 1990.
+
+\bibitem{XKS94}
+S.~Xu, C.~J. Kobak, and P.~E. Smouse.
+\newblock Constrained least squares estimation of mixed population stock
+  composition from mt\uppercase{DNA} haplotype frequency data.
+\newblock {\em Canadian Journal of Fisheries and Aquatic Sciences},
+  51:417--425, 1994.
+
 \end{thebibliography}
