@@ -271,14 +271,12 @@ produce a summary plot of the data
 (Figure~\ref{fig:data1}).
 \begin{figure}
 <<echo=FALSE,fig=TRUE>>=
-plot(mydata,mix.off=2,leg.space=0.35)
+plot(mydata,mix.off=2)
 @
 \caption{Basic plot of turtle mtDNA haplotype data,
-using \code{plot(mydata,mix.off=2,leg.space)}
+using \code{plot(mydata,mix.off=2)}
 (\code{mix.off=2} leaves a slightly larger space
-between the rookery and mixed stock data,
-while \code{leg.space=0.35} leaves more room
-for the legend)}
+between the rookery and mixed stock data)}
 \label{fig:data1}
 \end{figure}
 
@@ -326,11 +324,12 @@ gives you the raw table.
 
 \begin{figure}
 <<echo=FALSE,fig=TRUE>>=
-plot(lahanas98,mix.off=2)
+plot(lahanas98,mix.off=2,leg.space=0.4)
 @
-\caption{Condensed haplotype data from Lahanas 1998;
-\code{plot(lahanas98,mix.off=2)}
-\textbf{to do: fix legend spacing}}
+\caption{Condensed haplotype data from Lahanas 1998
+(\code{plot(lahanas98, mix.off=2, leg.space=0.4)};
+\code{leg.space=0.4} leaves more room
+for the legend)}
 \label{fig:condensed}
 \end{figure}
 
