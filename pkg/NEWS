@@ -1,4 +1,8 @@
- 0.9.1 2008/08/18
+devel:
+  fix manymany.txt and TO code for double definition
+ 
+
+0.9.1 2008/08/18
 
  minor vignette improvements
   use layout() for legends, check for text truncation

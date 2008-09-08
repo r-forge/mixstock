@@ -1930,7 +1930,7 @@ write.TO.bugscode = function(fn,MIX) {
   }
   block2 = c("# model for pi (the multinomial parameter)",
     "for(i in 1:R){sourcesamp[i,1:H] ~ dmulti(pi[i,1:H],T[i])}",
-    "for(i in 1:R){T[i] <- sum(sourcesamp[i,])}",
+    ## "for(i in 1:R){T[i] <- sum(sourcesamp[i,])}",
     "for(j in 1:R){pi[j,1:H] ~ ddirch(beta[j,])",
     "for(k in 1:H){beta[j,k] <- fp[k]}}",
     "",
@@ -2051,7 +2051,7 @@ mm.wbugs <- function(x,
         initlist <- list()
         for (j in 1:MIX) {
           Zname <- paste("Z",j,sep="")
-          initlist<- c(initlist,list(Zrand[j,]))
+          initlist<- c(initlist,list(Zrand[j,1:Tm[j]]))
           names(initlist)[j] <- Zname
         }
         inits[[i]] <- initlist
