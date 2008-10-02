@@ -1976,7 +1976,9 @@ mm.wbugs <- function(x,
                      returntype=c("mixstock","coda","bugs"),
                      pkg=c("WinBUGS","JAGS"),
                      mixprior=1,
-                     which.init,debug=FALSE,...) {
+                     which.init,debug=FALSE,
+                     working.directory,...) {
+  if (missing(working.directory)) working.directory <- tempdir()
   pkg <- match.arg(pkg)
   switch(pkg,WinBUGS=require("R2WinBUGS"),JAGS=require("R2jags"))
   inittype <- match.arg(inittype)
@@ -1986,15 +1988,17 @@ mm.wbugs <- function(x,
   R <- ncol(x$sourcesamp)
   H <- nrow(x$sourcesamp); H ## codetools kluge
   MIX <- ncol(x$mixsamp)
+  mm.bugscode <- paste(tempfile(paste("mm",bugs.code,"bugs",sep="_"),
+                                tmpdir=working.directory),"txt",sep=".")
   if (bugs.code=="TO") {
-    write.TO.bugscode("mm_TO_bugs.txt",MIX=MIX)
-    mm.bugscode <- "mm_TO_bugs.txt"
+    write.TO.bugscode(mm.bugscode,MIX=MIX)
     mixsamplist <- as.list(paste("mixsamp",1:MIX,sep=""))
     for (i in 1:MIX) {
       assign(paste("mixsamp",i,sep=""),expand.bugs.data(x$mixsamp[,i]))
     }
   } else {
-    mm.bugscode <- system.file(package = "mixstock", "bugs", "manymany.txt")
+    file.copy(system.file(package = "mixstock", "bugs", "manymany.txt"),
+              mm.bugscode)
     mixsamplist <- list("mixsamp")
     mixsamp <- expand.bugs.data(x$mixsamp)
     mixsamp ## codetools kluge
@@ -2012,13 +2016,16 @@ mm.wbugs <- function(x,
   attr(sourceprop.obs,"scaled:scale") <- NULL
   T <- rowSums(sourcesamp); T ## codetools kluge
   Tm <- colSums(x$mixsamp)
+  maxTm <- max(Tm)
   fp <- sourceprior[1,]  ## haplotype freq prior
   dp <- mixprior
   dp <- rep(dp,length.out=MIX+1) ## replicate mixed prior if necessary
   c(fp,dp) ## codetools kluge
-  data <- c(list("Tm","sourcesamp","sourcesize","R","H","MIX","fp","dp",
-                 "T"),
+  data <- c(list("Tm",
+                 "sourcesamp","sourcesize",
+                 "R","H","MIX","fp","dp","T"),
             mixsamplist)
+  if (bugs.code=="BB" && pkg=="JAGS") data <- c(data,"maxTm")
   parameters <- c("theta","div")
   ## initial values:
   if (inittype=="random") {
@@ -2065,6 +2072,7 @@ mm.wbugs <- function(x,
                                       n.chains=n.chains,
                                       n.iter=n.iter,n.burnin=n.burnin,
                                       n.thin=n.thin,
+                                      working.directory=working.directory,
                                       debug=debug,...))[3]
   } else {
     ## browser()
@@ -2072,6 +2080,7 @@ mm.wbugs <- function(x,
                                       n.chains=n.chains,
                                       n.iter=n.iter,n.burnin=n.burnin,
                                       n.thin=n.thin,
+                                      working.directory=working.directory,
                                       ...)$BUGSoutput)[3]
   }
   return(switch(returntype,

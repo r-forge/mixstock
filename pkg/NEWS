@@ -1,6 +1,8 @@
-devel:
+0.9.2 2008/10/02
+
   fix manymany.txt and TO code for double definition
- 
+  changed working directory for recent R2WinBUGS changes
+  JAGS now works (but not with "BB" code)
 
 0.9.1 2008/08/18
 

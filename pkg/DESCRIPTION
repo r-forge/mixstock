@@ -1,6 +1,6 @@
 Package: mixstock
-Version: 0.9.1
-Date: 2008/08/17
+Version: 0.9.2
+Date: 2008/10/02
 Title: functions for mixed stock analysis
 Author: Ben Bolker <bolker@zoo.ufl.edu>
 Maintainer: Ben Bolker <bolker@zoo.ufl.edu>

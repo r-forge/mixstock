@@ -1,3 +1,5 @@
+## JAGS needs this defined explicitly
+var Z[MIX,maxTm];
 model{
 ## DATA
 ##    Tm[m]: total samples from mixed pop. m
@@ -66,4 +68,5 @@ model{
 ##    dp[i] <- 1
 ##  }
 }
+
 
