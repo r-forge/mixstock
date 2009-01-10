@@ -5,8 +5,8 @@
 \alias{RL.burn}
 \title{Use Raftery and Lewis diagnostics to calculate MCMC chain lengths}
 \description{
-  Uses {\tt coda}'s \code{raftery.diag} implementation of the Raftery and Lewis
-  diagnostic to estimate minimum chain lengths for an MCMC estimate
+  Uses \code{coda::raftery.diag} (the Raftery and Lewis
+  diagnostic) to estimate minimum chain lengths for an MCMC estimate
   for mixed stock analysis.
   Runs R&L iteratively until the criteria are satisfied.
 }
