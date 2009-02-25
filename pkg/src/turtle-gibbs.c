@@ -55,26 +55,27 @@ int main(int argc, char ** argv) {
   frvec fprior,scontrib;
   frhmat srookfreq;
   double *resmat=0;
+  int tmp; /* to prevent warnings on unused result from scanf */
 
   int h,r;
 
   /* no sanity checks: should check maxiter<startiter, (maxiter-startiter)/thin is
    * an integer, startfval <= R, etc., etc. */
   printf("Enter # haps, # rooks:\n");
-  scanf("%d %d",&H,&R);
+  tmp=scanf("%d %d",&H,&R);
   /*   rooksamp=i2matrix(R,H); */
   printf("Enter hap samples from pooled pop (%d)\n",H);
   for (h=0; h<H; h++)
-    scanf("%d",poolsamp+h);
+      tmp=scanf("%d",poolsamp+h);
   for (r=0; r<R; r++) {
     printf("Hap samples from rookery %d:\n",r+1);
     for (h=0; h<H; h++)
-      scanf("%d",rooksamp[r]+h);
+	tmp = scanf("%d",rooksamp[r]+h);
   }
   printf("startfval (0 for equal contribs, 1<=n<=R for biased contrib):\n");
-  scanf("%d",&startfval);
+  tmp = scanf("%d",&startfval);
   printf("burn-in, total, thinning factor:\n");
-  scanf("%ld %ld %d",&startiter,&maxiter,&thin);
+  tmp = scanf("%ld %ld %d",&startiter,&maxiter,&thin);
   a=1.0;
   gibbs(H,R,a,startiter,maxiter,poolsamp,rooksamp,startfval,thin,fprior,resmat,
 	1,"turtle-gibbs",FALSE,rptiter,FALSE,scontrib,srookfreq);
