@@ -16,7 +16,8 @@ inittype=c("dispersed","random"),bugs.code=c("TO","BB"),
 pkg=c("WinBUGS","JAGS"),
 mixprior=1,
 which.init,
-debug=FALSE,...)
+debug=FALSE,
+working.directory,...)
 write.TO.bugscode(fn,MIX)
 }
 \arguments{
@@ -53,6 +54,7 @@ write.TO.bugscode(fn,MIX)
   \item{returntype}{return value as a \code{mixstock.est} object,
     a CODA object, or a BUGS object?}
   \item{pkg}{which package to use for back-end calculations}
+  \item{working.directory}{working directory for BUGS calculations}
 }
 \value{
   results of WinBUGS run, as a \code{mixstock.est} object

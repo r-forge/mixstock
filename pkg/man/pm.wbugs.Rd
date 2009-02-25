@@ -28,6 +28,10 @@ n.thin=max(1, floor(n.chains * (n.iter - n.burnin)/1000)),
 }
 \author{Ben Bolker}
 \seealso{\code{\link{tmcmc}}}
+\note{\code{\link{tmcmc}} is in general be much more convenient
+  and efficient than \code{pm.wbugs}:
+  \code{pm.wbugs} is included for completeness
+  and testing of \code{WinBUGS} methods.}
 \examples{
 data(bolten98)
 \dontrun{

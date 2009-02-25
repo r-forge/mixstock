@@ -13,7 +13,6 @@
 \newcommand{\code}[1]{{\tt #1}}
 \bibliographystyle{plain}
 
-\newcommand{\Rver}{2.7.1}
 \title{Mixed stock analysis in R: getting started with the 
   \code{mixstock} package}
 \author{Ben Bolker}
@@ -22,6 +21,10 @@
 \maketitle
 
 \linenumbers
+
+<<>>=
+Rver <- paste(R.version$major,R.version$minor,sep=".")
+@ 
 
 \section{Introduction}
 The \code{mixstock} package is a set of routines
@@ -75,7 +78,7 @@ the US and using Windows, you can go directly to
 \url{http://cran.us.r-project.org/bin/windows/base/}:
 you will need to download a file called \code{R-x.y.z-win32.exe}
 which will install \R\ for you, when executed; \code{x.y.z}
-stands for the current version of \R\ \Rver\ as of \today).
+stands for the current version of \R\ (\Sexpr{Rver} as of \today).
 Otherwise, see
 \url{http://www.r-project.org/mirrors.html} for a list of alternative
 ``mirror sites'' closer to you and navigate through the
@@ -110,8 +113,7 @@ should have asked whether you want to add a shortcut
 to the desktop or the Start menu: if
 you didn't, you will have to search for a file
 called \code{Rgui.exe}, which probably lives somewhere
-like \code{Program Files\\R\\R-\Rver\\bin} depending
-on what version of \R\ you are using and where
+(on Windows) like \verb+Program Files\R\R-+{\tt \Sexpr{Rver}}\verb+\bin+ depending on what version of \R\ you are using and where
 you decided to install it.
 \R\ will open up a window for you with a command
 prompt ({\verb+>+}), at which you can type
@@ -576,7 +578,10 @@ Brief installation instructions for these programs:
       download and install a development version of the package})
   \end{itemize}
     You can use the \code{pm.wbugs()} command (with the same syntax
-    as \code{tmcmc} above) to run basic mixed stock analysis.
+    as \code{tmcmc} above) to run basic mixed stock analysis
+    (although \code{tmcmc} will in general be much more convenient
+    and efficient: \code{pm.wbugs} is included for completeness
+    and testing of \code{WinBUGS} methods).
     Use \code{mm.wbugs()} to run many-to-many analyses, with
     \code{R2WinBUGS} (default, \code{pkg="WinBUGS"}) or \code{JAGS} 
     (\code{pkg="JAGS"}).
