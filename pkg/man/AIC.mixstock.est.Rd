@@ -19,7 +19,7 @@
 \method{logLik}{mixstock.est}(object,\dots)
 \method{confint}{mixstock.est}(object,parm,level=0.95,profile=FALSE,type=c("quantile","credible"),
 show.sourcectr=TRUE,show.haps=FALSE,\dots)
-\method{summary}{mixstock.est}(object,\dots)
+\method{summary}{mixstock.est}(object,show.data=TRUE,\dots)
 as.mixstock.est(object)
 }
 \arguments{
@@ -33,6 +33,7 @@ as.mixstock.est(object)
   \item{show.sourcectr}{show confidence intervals for source-centric
     estimates?}
   \item{show.haps}{show confidence limits for marker frequencies?}
+  \item{show.data}{print data in summary?}
   \item{\dots}{additional arguments}
 }
 \value{

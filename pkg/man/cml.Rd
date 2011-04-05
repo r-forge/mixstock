@@ -1,4 +1,6 @@
 \name{cml}
+\alias{MAXMARK}
+\alias{MAXSRC}
 \alias{cml}
 \title{Mixed stock analysis by conditional maximum likelihood}
 \description{
@@ -12,6 +14,8 @@ cml(x, start.type="lsolve", fuzz=0, bounds=1e-4,
 ndepfac=1000,method="L-BFGS-B",lower=NULL,upper=NULL,
 ndeps=NULL,
 control=NULL,debug=FALSE,transf="part",grad=cml.grad,...)
+MAXMARK
+MAXSRC
 }
 \arguments{
   \item{x}{a list with elements \code{mixsamp} (a vector of the sampled
@@ -44,9 +48,11 @@ control=NULL,debug=FALSE,transf="part",grad=cml.grad,...)
 }
 \details{By default, uses \code{mle} which in turn uses \code{optim}
   with \code{method="L-BFGS-B"} to do bounded optimization}
+\note{There is a hard-coded limit of 500 markers and 100 sources;
+  contact the package maintainer if this is a problem}
 \value{
  an object of class \code{\link{mixstock.est}}, containing the results of
-the fit
+ the fit
 }
 \author{Ben Bolker}
 \examples{

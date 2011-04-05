@@ -2,6 +2,10 @@
   library.dynam("mixstock",pkg,lib)
 }
 
+## hard-coded limits in C functions (!!)
+MAXMARK <- 500
+MAXSRC  <- 100
+
 ## blockdiag, rdirichlet, dec.to.roman, addlabels.barplot extracted from
 ##  bbmisc package -- avoid extra dependencies
 
@@ -221,18 +225,20 @@ coef.mixstock.est <- function(object,...) {
          input.only=(object$method=="cml"))
 }
 
-summary.mixstock.est <- function(object,...) {
-  if (is.null(object$data)) {
-    cat("No data stored\n")
-  } else {
-    print.mixstock.data(object$data)
+summary.mixstock.est <- function(object,show.data=TRUE,...) {
+  if (show.data) {
+    if (is.null(object$data)) {
+      cat("No data stored\n")
+    } else {
+      print.mixstock.data(object$data)
+    }
   }
   ## print.mixstock.est(object)
   ## if (!is.null(object$resample)) {
   ## cat("\nResampling method:",object$boot.method,"\n")
   ## print(summary(object$resample))
   ##  }
-  cobj <- confint(object)
+  cobj <- confint(object,...)
   fit <- object$fit[!sapply(object$fit,is.null)] ## drop NULLs
   all <- cbind(unlist(lapply(fit,t)),cobj)
   rownames(all) <- rownames(cobj)
@@ -499,6 +505,8 @@ mcmc.chainlength.est <- function(x,mult=1,inflate=sqrt(2),
   
 
 q.to.p <- function(q,transf="full") {
+  if (length(q)>MAXSRC*MAXMARK) stop(paste("exceeded hard-coded size limits:",
+                                            "(total vector length=",MAXSRC*MAXMARK,")",sep=""))
   contin = (transf=="full")
   if (any(is.na(q)))
     rep(NA,length(q)+1)
@@ -541,6 +549,8 @@ loglik2.C <- function(p,sourcesamp,
   cumcount <- 0
   H <- length(mixsamp)
   R <- length(sourcesamp)/H
+  if (R>MAXSRC || H > MAXMARK) stop(paste("exceeded hard-coded size limits:",
+                                    " (R=",MAXSRC,", H=",MAXMARK,")",sep=""))
   result <- .C("loglik2wrap",
                as.double(lik),
                as.double(p),
@@ -784,6 +794,8 @@ gibbsC <- function(a=1,startiter,maxiter,data,mixsamp=NULL,
         "\nrandseed:",randseed,
         "\nrptiter:",rptiter,
         "\noutfn:",outfn,"\n")
+  if (R>MAXSRC || H > MAXMARK) stop(paste("exceeded hard-coded size limits:",
+                                          " (R=",MAXSRC,", H=",MAXMARK,")",sep=""))
   r <- .C("gibbswrap",
           as.integer(H),
           as.integer(R),
@@ -1520,9 +1532,11 @@ numderiv <- function(p,fn,eps=1e-5,...) {
   ret
 }
 
-
+## FIXME: remind myself what this does and what the limits should be
 dcmat.a <- function(x,debug=FALSE) {
   n <- length(x)
+  if (n>MAXSRC) stop(paste("exceeded hard-coded size limits:",
+                                           "(R=",MAXSRC,")",sep=""))
   matrix(.C("dcmat",as.double(x),as.double(numeric(n*(n+1))),as.integer(n),
             as.integer(debug),PACKAGE="mixstock")[[2]],
          nrow=n+1)
@@ -1536,8 +1550,8 @@ cml.grad <- function(p,
                      fulllik=NULL,
                      debug=FALSE) {
   ## sourcefreq  is transformed source frequencies
-  R = ncol(sourcefreq)
-  H = nrow(sourcefreq)+1
+  R <- ncol(sourcefreq)
+  H <- nrow(sourcefreq)+1
   c0 <- unpackval(c(p,sourcefreq),transf=transf,R=R,H=H)
   M <- data$mixsamp  ## true samples
   m <- as.matrix(c0$source.freq) %*% c0$input.freq  ## calc freqs in mix
