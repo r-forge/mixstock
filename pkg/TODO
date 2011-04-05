@@ -1,3 +1,7 @@
+  fix summary.mixstock.est for CML
+  update NEWS format to NEWS.Rd
+  fix tmcmc for maxmarks
+  pass level argument through plot.mixstock.estimate
 
   fix warnings in plotCI -- forward plotCI hack to Jim Lemon
   progress bars
