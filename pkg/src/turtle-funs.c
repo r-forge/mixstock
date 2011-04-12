@@ -4,6 +4,7 @@
 #include <Rmath.h>
 #include "utils.h"
 #define MAXMARK 500
+#define MAXMARK1 501
 #define MAXSRC  100
 #define MAXSRC1 101
 /* MAXDIM was 100 */
@@ -76,8 +77,8 @@ void dcmat(double *p, double *xmat, int *len,
 	   int *debug) {
   int r,c,k,nrow,ncol;
   int contin=0;
-  /* how big must this be? */
-  double remmat[MAXSRC][MAXSRC1];
+  /* how big must this be? how big can it be? */
+  double remmat[MAXMARK][MAXMARK1];
   double tmpsum;
   nrow=*len+1;
   ncol = *len;

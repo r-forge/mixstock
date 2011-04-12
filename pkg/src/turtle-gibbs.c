@@ -6,9 +6,9 @@
 #include "R_ext/PrtUtil.h"
 
 #define min(a,b) ((a) <= (b) ? (a) : (b))
-#define MAXNCAT 100L
+#define MAXNCAT 500L
 #define MAXHAP  MAXNCAT
-#define MAXROOK MAXNCAT
+#define MAXROOK 100L
 
 typedef float  frvec[MAXROOK];
 typedef float  fhvec[MAXHAP];
@@ -187,11 +187,11 @@ int gibbs(int H, int R, float a, long startiter, long maxiter,
   }
      
   if (H>MAXHAP) {
-    Rprintf("# haplotypes (%d) exceeds maximum (%ld)\n",H,MAXHAP);
+    Rprintf("# haplotypes (%d) exceeds maximum (%d)\n",H,MAXHAP);
     return(1);
   }
   if (R>MAXROOK) {
-    Rprintf("# rookeries (%d) exceeds maximum (%ld)\n",R,MAXROOK);
+    Rprintf("# rookeries (%d) exceeds maximum (%d)\n",R,MAXROOK);
     return(1);
   }
   for (r=0; r<R; r++) {

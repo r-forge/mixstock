@@ -1,13 +1,11 @@
   fix summary.mixstock.est for CML
-  update NEWS format to NEWS.Rd
-  fix tmcmc for maxmarks
-  pass level argument through plot.mixstock.estimate
 
-  fix warnings in plotCI -- forward plotCI hack to Jim Lemon
-  progress bars
+  progress bars (for tmcmc?)
   suppress warnings in boot?
+  work on size limits for dcmat/dcmat.a
   diag1 : check variability/ hack vignette
   par (ask)
+  check error reporting on >maxcategories?
 
 - print contributions as <0.001? (with printCoefmat)
 - add as.data.frame.mixstock.data

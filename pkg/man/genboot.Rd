@@ -9,7 +9,7 @@
 }
 \usage{
 genboot(x, method="cml", nboot=1000, rseed=1001, verbose=FALSE,
-fuzz=0.001, maxfail=100, rpt=20, start.type="lsolve",
+fuzz=0.001, maxfail=100, pb=TRUE, start.type="lsolve",
 param=FALSE,param.match="mean",ndepfac=10000,save.boot=FALSE,
 print.boot=FALSE,...)
 }
@@ -26,7 +26,7 @@ print.boot=FALSE,...)
   \item{fuzz}{small value for keeping estimated frequencies away from 0/1}
   \item{maxfail}{number of consecutive fitting tries before entering NAs
   for a given simulation}
-  \item{rpt}{frequency with which to report progress}
+  \item{pb}{(logical) draw progress bar?}
   \item{start.type}{starting conditions for fitting procedure (see
     \code{\link{startvec}} and/or \code{\link{startvec0}})}
   \item{param}{Do parametric bootstrapping?}

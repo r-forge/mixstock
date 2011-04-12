@@ -8,11 +8,12 @@
 }
 \usage{
 mysum(x, names = NULL)
-mysumvec(x,names=NULL)
+mysumvec(x,names=NULL,levels=c(0.95,0.9))
 }
 \arguments{
   \item{x}{a numeric matrix representing MCMC output}
   \item{names}{vector of column names}
+  \item{levels}{numeric vector of confidence levels}
 }
 \details{
   a slight variant on the standard numeric summary: calculates

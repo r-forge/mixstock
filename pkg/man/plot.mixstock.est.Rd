@@ -12,7 +12,7 @@
    markcolors = rainbow(x$H),
    alength=0.25,
    aunits="inches",
-   abbrev,\dots)
+   abbrev, level=0.95, \dots)
 }
 \arguments{
   \item{x}{mixstock estimate}
@@ -26,6 +26,7 @@
   \item{abbrev}{abbreviate names on horizontal axis in many-to-many
     plots? Default if TRUE is 3 characters, but may also be an integer
     specifying the number of characters}
+  \item{level}{confidence level}
   \item{\dots}{other arguments to \code{\link{barplot}}}
 }
 \note{
