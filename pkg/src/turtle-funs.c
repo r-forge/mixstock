@@ -94,8 +94,8 @@ void dcmat(double *p, double *xmat, int *len,
   if (*debug==1) {
     for (r=0; r<(nrow-1); r++) {
       for (c=0; c<ncol; c++)
-	fprintf(stderr,"%1.3f ",remmat[r][c]);
-      fprintf(stderr,"\n");
+	REprintf("%1.3f ",remmat[r][c]);
+      REprintf("\n");
     }
   }
   /* fill in lower triangle */
@@ -108,8 +108,8 @@ void dcmat(double *p, double *xmat, int *len,
   if (*debug==1) {
   for (r=0; r<(nrow-1); r++) {
     for (c=0; c<ncol; c++)
-      fprintf(stderr,"%1.3f ",xmat[r+c*nrow]);
-    fprintf(stderr,"\n");
+      REprintf("%1.3f ",xmat[r+c*nrow]);
+    REprintf("\n");
   }
   }
   /* fill in diagonal */

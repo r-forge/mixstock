@@ -7,7 +7,7 @@
 \usage{
 simmixstock2(sourcefreq, destmat, sourcesize,
  sourcesampsize, mixsampsize,
-             nmark, nsource, nmix, rseed = NULL)
+             nmark, nsource, nmix, rseed = NULL, condense=TRUE)
 }
 \arguments{
   \item{sourcefreq}{matrix of marker frequencies in the source populations}
@@ -20,6 +20,8 @@ simmixstock2(sourcefreq, destmat, sourcesize,
   \item{nsource}{number of source populations}
   \item{nmix}{number of mixed populations}
   \item{rseed}{random number seed}
+  \item{condense}{automatically use \code{markfreq.condense} to condense
+    result?}
 }
 \details{If \code{sourcefreq} and \code{destmat} are
   specified, computes expected marker frequencies in mixed

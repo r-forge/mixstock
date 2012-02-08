@@ -1,6 +1,6 @@
-.First.lib <- function(lib,pkg) {
-  library.dynam("mixstock",pkg,lib)
-}
+## .First.lib <- function(lib,pkg) {
+##  library.dynam("mixstock",pkg,lib)
+## }
 
 ## hard-coded limits in C functions (!!)
 MAXMARK <- 500
@@ -271,6 +271,7 @@ plot.mixstock.data <- function(x,prop=TRUE,legend=TRUE,
                                stacklabels=FALSE,
                                sampsize=FALSE,
                                horiz=TRUE,
+                               vlab="Haplotype frequency",
                                ...) {
   ## H <- nrow(x$sourcesamp)
   R <- ncol(x$sourcesamp)
@@ -302,13 +303,15 @@ plot.mixstock.data <- function(x,prop=TRUE,legend=TRUE,
                  axes=FALSE,col=colors,
                  space=c(rep(0.2,R),mix.off,rep(0.2,M-1)),
                  horiz=TRUE,
-                 names.arg=rep("",R+M),...)
+                 names.arg=rep("",R+M),
+                 xlab=vlab,...)
   } else {
     b <- barplot(as.matrix(vals), ## ylim=c(0,y.ht),
                  axes=FALSE,col=colors,
                  space=c(rep(0.2,R),mix.off,rep(0.2,M-1)),
                  horiz=FALSE,
-                 names.arg=rep("",R+M),...)
+                 names.arg=rep("",R+M),
+                 ylab=vlab,...)
   }
   b.axis = if (horiz) 2 else 1
   f.axis = if (horiz) 1 else 2
@@ -1960,7 +1963,7 @@ write.TO.bugscode = function(fn,MIX) {
     "for(j in 1:R){",
     "for(k in 1:(MIX+1)) {",
     "	div[j,k] <- delta[j,k]/sum(delta[j,])",
-    "	delta[j,k] ~ dgamma(dp[k],1)",
+    "	delta[j,k] ~ dgamma(dp[j,k],1)",
     "}",
     "}",
     "")
@@ -2042,7 +2045,13 @@ mm.wbugs <- function(x,
   maxTm <- max(Tm)
   fp <- sourceprior[1,]  ## haplotype freq prior
   dp <- mixprior
-  dp <- rep(dp,length.out=MIX+1) ## replicate mixed prior if necessary
+  ## following could be done more compactly but maybe clearer this way
+  if (length(dp)==1) {  ## scalar: expand
+    dp <- matrix(dp,nrow=R,ncol=MIX+1)
+  } else if (length(dp)==MIX+1) {  ## single row: expand
+    dp <- matrix(dp,nrow=R,ncol=MIX+1,byrow=TRUE)
+  } else if (!all(dim(dp)==c(R,MIX+1))) stop("prior for source-to-mixed contributions is the wrong shape")
+  ## dp <- rep(dp,length.out=MIX+1) ## replicate mixed prior if necessary
   c(fp,dp) ## codetools kluge
   data <- c(list("Tm",
                  "sourcesamp","sourcesize",
@@ -2227,7 +2236,8 @@ simmixstock2 <- function(sourcefreq, destmat,
                          sourcesize,
                          sourcesampsize, mixsampsize,
                          nmark, nsource, nmix,
-                         rseed = NULL) 
+                         rseed = NULL,
+                         condense = TRUE) 
 {
   nmat <- function(x) { sweep(x,2,colSums(x),"/") }
   if (!is.null(rseed)) 
@@ -2251,7 +2261,9 @@ simmixstock2 <- function(sourcefreq, destmat,
                       n=1, size=mixsampsize)
   dimnames(sourcesamp.r) <- mixstock.dimnames(nmark, nsource)
   dimnames(mixsamp.r) <- list(marker=dimnames(sourcesamp.r)[[1]],mix=paste("M",1:nmix,sep=""))
-  return(mixstock.data(sourcesamp=sourcesamp.r,mixsamp=mixsamp.r))
+  m <- mixstock.data(sourcesamp=sourcesamp.r,mixsamp=mixsamp.r)
+  if (condense) m <- markfreq.condense(m)
+  return(m)
 }
 
 ## code for reading from/writing to Masuda&Pella control files
@@ -2320,9 +2332,9 @@ put.ctl <- function(fn,which=1,tot,ranseed=c(899271,4480026,90092812),
    cat("T T T T\n")
    cat(formatC(1,width=3),
        formatC(H,width=3),
-       format.char("F",width=3,flag="+"),  ## Hardy-Weinberg,
+       formatC("F",width=3,flag="+"),  ## Hardy-Weinberg,
        "  ",
-       format.char("mtDNA",width=18,flag="+"),"\n",sep="")
+       formatC("mtDNA",width=18,flag="+"),"\n",sep="")
    for (i in 1:R) {
      ## FORTRAN format specified: I3,1X,F7.6,2X,A18,1X,F7.6
      ## can't quite match FORTRAN FX.Y format: digits=n always
@@ -2331,7 +2343,7 @@ put.ctl <- function(fn,which=1,tot,ranseed=c(899271,4480026,90092812),
           " ",
           formatC(fprior[i],width=6,digits=5,format="f"),
           "  ",
-          format.char(sourcenames[i],width=18),
+          formatC(sourcenames[i],width=18),
           " ",
           formatC(startval[i],width=6,digits=5,format="f"),
           "\n",

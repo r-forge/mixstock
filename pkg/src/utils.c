@@ -4,6 +4,7 @@
 #include <math.h>
 #include "machdefs.h"
 #include "utils.h"
+#include "R_ext/print.h"
 
 #ifdef EXTRAMATH
 /* round double to nearest integer; part of std Unix libraries */
@@ -28,12 +29,12 @@ double aint(double x) {
 #endif
 
 void FatalError(char * msg, int ecode) {
-  fprintf(stderr,"%s\n",msg);
-  exit(ecode);
+    REprintf("%s\n",msg);
+    /* exit(ecode); */
 }
 
 void WarnError(char * msg, int ecode) {
-  fprintf(stderr,"%d: %s\n",ecode,msg);
+    REprintf("%d: %s\n",ecode,msg);
 }
 
 unsigned gettok( char * instr, unsigned maxlen, float * tmpcor )
@@ -78,11 +79,11 @@ void * salloc(size_t s)
     {
       t = (char *)malloc(s);
       if (t==NULL) {
-	fprintf(stderr,"Sorry: out of memory\n");
-	fflush(stderr);
-	fprintf(stderr,"(tried to allocate %d bytes, total allocation so far=%1.0f)\n",s,tot_alloc);
-	fflush(stderr);
-      exit(12);
+	  REprintf("Sorry: out of memory\n");
+	  /* fflush(stderr); */
+	  REprintf("(tried to allocate %d bytes, total allocation so far=%1.0f)\n",s,tot_alloc);
+	  /* fflush(stderr); */
+	  /* exit(12); */
       }
       tot_alloc += (float)s;
     }
@@ -96,8 +97,8 @@ void * scalloc(size_t s, unsigned n)
 
   if ((s*n)>0) {
 	  t = (char *)calloc(s,n);
-	  if (t==NULL) { fprintf(stderr,"Sorry: out of memory\n");
-			 exit(12);
+	  if (t==NULL) { REprintf("Sorry: out of memory\n");
+	      /* exit(12); */
 		   };
 	  };
 	  return((void *)t);
@@ -133,7 +134,7 @@ FILE * tryfile(char * descrip, char * suff, int outp, int excode) {
     if ((tmpfil=fopen(fn,icode))==NULL) {
       sprintf(emsg,"Can't open %s file %s\n",ioname,fn);
       FatalError(emsg,excode);
-	  exit(0); /* make compiler happy */
+      /* exit(0); */ /* make compiler happy */
       return(NULL); /* make Borland C compiler happy */
     } else
       return(tmpfil);

@@ -39,9 +39,11 @@ write.TO.bugscode(fn,MIX)
     want old-style (Toshi Okuyama=TO) or more compact but
     possibly slower (Ben Bolker=BB) code}
   \item{mixprior}{Dirichlet prior for contributions to mixed
-    stocks.  Should be either a vector of length (nmix+1) --
-    one extra for the unknown stock -- or a single numeric value
-    which will be replicated}
+    stocks.  Should be either (1) a a single numeric value
+    which will be replicated the appropriate number of times;
+    (2) a vector of length (nmix+1) [one extra for the unknown stock],
+    identical for all sources -- or (3) a matrix with (nmix+1)
+    columns and a row for each source}
   \item{which.init}{for "dispersed" start with fewer chains than
     sources, which sources should be used as the dominant sources
     in the chains? (default is a random sample without replacement from

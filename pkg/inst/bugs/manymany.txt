@@ -13,7 +13,7 @@ model{
 ## PRIORS
 ##    beta[r,h]: marker (h) frequency in source r (fixed to fp)
 ##    fp[h]: pseudo-Bayesian prior prob. for marker h (input)
-##    dp[m]: Dirichlet prior for contribution to mixed pop (fixed to 1)
+##    dp[r,m]: Dirichlet prior for contribution from source r to mixed pop m
 ## VARIABLES
 ##    Z[m,n]: source (1..R) origin of individual n from mixed pop. m
 ##    pi[r,h]: frequency of marker h in source r
@@ -43,7 +43,7 @@ model{
   for(j in 1:R){
      for (k in 1:(MIX+1)) {
 	div[j,k] <- delta[j,k]/sum(delta[j,])
-	delta[j,k] ~ dgamma(dp[k],1)
+	delta[j,k] ~ dgamma(dp[j,k],1)
     }
   }
 ## scale source contributions by size

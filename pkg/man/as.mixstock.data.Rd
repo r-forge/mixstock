@@ -14,7 +14,7 @@
 as.mixstock.data(object,nmix=1,sourcesize)
 \method{plot}{mixstock.data}(x,prop = TRUE, legend = TRUE, colors = rainbow(x$H), 
     leg.space = 0.3, leg.ncol, leg.cex=1, mix.off = 0.5,
-    stacklabels=FALSE, sampsize=FALSE, horiz=TRUE, ...)
+    stacklabels=FALSE, sampsize=FALSE, horiz=TRUE, vlab="Haplotype frequency", ...)
 \method{print}{mixstock.data}(x,\dots)
 
 }
@@ -38,6 +38,7 @@ as.mixstock.data(object,nmix=1,sourcesize)
   \item{sourcesize}{either a numeric vector of relative source sizes, or
     "first" or "last" to specify that the first or last row
     of the matrix contains the source sizes}
+  \item{vlab}{label for value axis}
   \item{...}{additional arguments to \code{\link{barplot}}}
 }
 \value{

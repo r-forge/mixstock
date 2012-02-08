@@ -4,6 +4,14 @@
 \title{mixstock News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 0.9.5 (8/2/2012)}{
+  \itemize{
+    \item add NAMESPACE
+    \item tweak source code to avoid warnings; comment out unused BUGSout, etc.
+    \item allow r*(m+1) informative prior in many-to-many (suggestion of Juli
+  }
+}
+
 \section{CHANGES IN VERSION 0.9.3 (4/2011)}{
   \itemize{
   \item document/boost/test for hardcoded limits in C code (thanks to Jennifer Mandel)
@@ -34,12 +42,12 @@
 }}
 
 
-\section{CHANGES IN VERSION 0.9 (2008/05/14)}
+\section{CHANGES IN VERSION 0.9 (2008/05/14)}{
 \itemize{
   \item version bump for move to r-forge
   }}
 
-  \section{CHANGES IN VERSION 0.8.5}
+  \section{CHANGES IN VERSION 0.8.5}{
   \itemize{
     \item another plotting bug
     \item remove WINE/useWINE/WINEPATH from pm.wbugs, mm.wbugs,
@@ -96,11 +104,12 @@
     \item added a bit more support for many-to-many
 }}
 
-\section{CHANGES IN VERSION mixstock v0.8 (1st version of mixstock)}{
-\itemize{
-  \item change names to mixstock, de-turtle-ize
-  \item adding multiple-mixed-stock support
-  \item changed n.iter/n.burn/n.thin to match R2WinBUGS default
+\section{CHANGES IN VERSION 0.8}{
+  \itemize{
+    \item first version called "mixstock"
+    \item change names to mixstock, de-turtle-ize
+    \item adding multiple-mixed-stock support
+    \item changed n.iter/n.burn/n.thin to match R2WinBUGS default
 }}
 
 \section{CHANGES IN VERSION 5.2.03}{
