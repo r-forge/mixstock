@@ -285,9 +285,9 @@ plot.mixstock.data <- function(x,prop=TRUE,legend=TRUE,
   if (prop) vals <- sweep(vals,2,ssize,"/")
   if (legend) {
     if (horiz) {
-      layout(matrix(1:2,nrow=1,ncol=2),width=c(1,leg.space))
+      layout(matrix(1:2,nrow=1,ncol=2),widths=c(1,leg.space))
     } else {
-      layout(matrix(2:1,nrow=2,ncol=1),height=c(leg.space,1))
+      layout(matrix(2:1,nrow=2,ncol=1),heights=c(leg.space,1))
     }
     ## if (!legend) leg.space <- 0
     ## y.ht <- 1/(1-leg.space)
@@ -412,7 +412,7 @@ plot.mixstock.est <- function(x,
                               xlab="Source",ylab=contrib.lab,...))
     }
     axis(side=2)
-    axis(side=1,at=1:x$R,label=names(ifreq))
+    axis(side=1,at=1:x$R,labels=names(ifreq))
     if (plot.freqs) {
       if (x$method=="cml")
         warning("CML estimate, no source frequencies estimated")
@@ -750,7 +750,7 @@ normcols <- function(z) {
   scale(z,center=FALSE,scale=colSums(z))
 }
 
-gibbsC <- function(a=1,startiter,maxiter,data,mixsamp=NULL,
+gibbsC <- function(a=1,startiter=0, maxiter,data,mixsamp=NULL,
                    sourcesamp=NULL,startfval=NULL,thin=1,
                    fprior=NULL,outfile=FALSE,outfn="mixstock-gibbs",
                    randseed=1001,
@@ -1090,7 +1090,7 @@ calc.RL.0 <- function (data, startfval = 0, pilot = 500, maxit = 15, verbose = F
     res <- matrix(ncol = 2, nrow = maxit + 1)
     if (debug) 
         cat("Beginning gibbsC\n")
-    g0 <- gibbsC(start = 0, thin = 1, maxiter = pilot, mixsamp = 
+    g0 <- gibbsC(startiter = 0, thin = 1, maxiter = pilot, mixsamp = 
                  mixsamp, 
                  sourcesamp = sourcesamp, startfval = startfval, randseed = rseed)
     contrib.end <- g0[pilot,1:R]
@@ -1121,7 +1121,7 @@ RL.parms["Total"],
         res[it, ] <- c(curlen, RL.parms["Total"])
         curlen <- RL.parms["Total"]
         add.num <- curlen - pilot
-        g1 <- gibbsC(start = 0, thin = 1, maxiter = add.num, 
+        g1 <- gibbsC(startiter = 0, thin = 1, maxiter = add.num, 
             mixsamp = mixsamp, sourcesamp = sourcesamp, startfval = 
 startfval, 
             randseed = rseed + it,contrib.start = contrib.end, 
@@ -1217,7 +1217,7 @@ calc.GR <- function(data,tot=20000,burn=1,verbose=FALSE,rseed=1001,
   g <- lapply(1:R,
         	function(z) {
 	      if (verbose) cat("G&R: running chain",z,"of",R,"\n");
-              gibbsC(start=burn+chain.start,
+              gibbsC(startiter=burn+chain.start,
                      thin=1,
                      maxiter=tot+burn,
                      mixsamp=mixsamp,
@@ -1307,7 +1307,7 @@ tmcmc <- function(data,n.iter=20000,rseed=1001,n.burnin=floor(n.iter/2),
         outfn <- paste(outfile,".",z,sep="")
         outfile <- TRUE
       }
-      gibbsC(start=n.burnin,
+      gibbsC(startiter=n.burnin,
              thin=n.thin,
              maxiter=n.iter,
              mixsamp=mixsamp,
@@ -1315,7 +1315,7 @@ tmcmc <- function(data,n.iter=20000,rseed=1001,n.burnin=floor(n.iter/2),
              sourcesamp=sourcesamp,rptiter=rptiter,
              startfval=z,a=a)[,1:maxpar]
     }
-    else gibbs(start=n.burnin,
+    else gibbs(startiter=n.burnin,
                ## thin=1, ## thin not implemented?
                maxiter=n.iter,
                mixsamp=mixsamp,

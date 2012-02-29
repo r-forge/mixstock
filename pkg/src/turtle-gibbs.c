@@ -3,7 +3,7 @@
 #include <string.h>
 #include "utils.h"
 #include <R.h>
-#include "R_ext/PrtUtil.h"
+#include <R_ext/PrtUtil.h>
 
 #define min(a,b) ((a) <= (b) ? (a) : (b))
 #define MAXNCAT 500L

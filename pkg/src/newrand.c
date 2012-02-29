@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include "R_ext/PrtUtil.h"
+#include <R_ext/PrtUtil.h>
 #define MAXNCAT 500L
 
 void genmul(int n, double *p, int ncat,int *ix, int round)

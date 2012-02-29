@@ -1,6 +1,6 @@
 #include <math.h>
 #include <stdio.h>
-#include "R_ext/PrtUtil.h"
+#include <R_ext/PrtUtil.h>
 #include <Rmath.h>
 #include "utils.h"
 #define MAXMARK 500
