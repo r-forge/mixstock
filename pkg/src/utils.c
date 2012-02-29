@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <R_ext/print.h>
+#include <R_ext/Print.h>
 #include "machdefs.h"
 #include "utils.h"
 
