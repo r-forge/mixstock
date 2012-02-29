@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <R_ext/print.h>
 #include "machdefs.h"
 #include "utils.h"
-#include "R_ext/print.h"
 
 #ifdef EXTRAMATH
 /* round double to nearest integer; part of std Unix libraries */
