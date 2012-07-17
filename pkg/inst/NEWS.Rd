@@ -3,12 +3,17 @@
 \name{NEWS}
 \title{mixstock News}
 \encoding{UTF-8}
+\section{CHANGES IN VERSION 0.9.5.1 (17/07/2012)}{
+ \itemize{
+    \item clean out spurious .RData file; version bump
+ }
+}
 
 \section{CHANGES IN VERSION 0.9.5 (8/2/2012)}{
   \itemize{
     \item add NAMESPACE
     \item tweak source code to avoid warnings; comment out unused BUGSout, etc.
-    \item allow r*(m+1) informative prior in many-to-many (suggestion of Juli
+    \item allow r*(m+1) informative prior in many-to-many (suggestion of Julia Reisser)
   }
 }
 
