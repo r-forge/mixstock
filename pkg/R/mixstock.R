@@ -2536,6 +2536,7 @@ as.data.frame.mixstock.est <- function(x,row.names, optional, ...) {
     if (!missing(row.names)) warning("'row.names' argument ignored")
     if (!missing(optional)) warning("'optional' argument ignored")
     require(plyr)
+    require(reshape2)
     ## unpack from $resample
     mm <- (!is.null(x$resamplist$div)) ## ?? is this adequate?
     if (!mm) stop("as.data.frame is only implemented for many-to-many fits")

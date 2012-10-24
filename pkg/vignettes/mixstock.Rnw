@@ -26,7 +26,7 @@
 
 <<echo=FALSE>>=
 Rver <- paste(R.version$major,R.version$minor,sep=".")
-Rver <- "2.14.1"  ## override -- using devel version
+Rver <- "2.15.1"  ## override -- using devel version
 options(continue=" ")
 @ 
 
@@ -58,7 +58,7 @@ package are described in \cite{bolk+03c} and
 \cite{PellMasu01}.
 
 \textbf{This package is in the public domain (GNU General Public
-License), is \textcopyright 2008 Ben Bolker and
+License), is \textcopyright 2008-2012 Ben Bolker and
 Toshinori Okuyama,
 and comes with NO WARRANTY.  Please suggest improvements to
 me (Ben Bolker) at {\tt bolker@mcmaster.ca}.}
@@ -729,7 +729,18 @@ Summary/confidence intervals:
 <<>>=
 summary(Zfit)
 @ 
-(check this!)
+
+Possibly prettier/do it yourself with ggplot:
+<<fig=TRUE>>=
+Zfit.d <- as.data.frame(Zfit)
+require(ggplot2)
+require(grid)
+theme_set(theme_bw())
+zmargin <- theme(panel.margin=unit(0,"lines"))
+print(ggplot(subset(Zfit.d,type=="input.freq"),
+       aes(x=from,y=est,ymin=lwr,ymax=upr))+
+    geom_pointrange()+facet_wrap(~to)+zmargin)
+@ 
 
 \section{Quick start}
 \label{sec:quickstart}

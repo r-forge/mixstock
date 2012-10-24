@@ -2,6 +2,7 @@
 useDynLib(mixstock)
 importFrom("lattice",xyplot)
 importFrom("plyr",ldply)
+importFrom("reshape2",melt)
 export(MAXMARK,MAXSRC,addlabels.barplot,blockdiag,
        rdirichlet,mixstock.data,as.mixstock.data,
        sourcenames,marknames,mixnames,locnames,
