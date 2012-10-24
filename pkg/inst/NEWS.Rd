@@ -3,6 +3,20 @@
 \name{NEWS}
 \title{mixstock News}
 \encoding{UTF-8}
+
+\section{CHANGES IN VERSION 0.9.5.3 (23/10/2012)}{
+ \itemize{
+   \item fix bugs in many-to-many confint() conversion, naming
+   \item add as.data.frame for many-to-many mixstock.est objects (add plyr dependency)
+ }
+}
+
+\section{CHANGES IN VERSION 0.9.5.2 (17/07/2012)}{
+ \itemize{
+    \item clean out spurious RCS/auto files; version bump
+ }
+}
+
 \section{CHANGES IN VERSION 0.9.5.1 (17/07/2012)}{
  \itemize{
     \item clean out spurious .RData file; version bump

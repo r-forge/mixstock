@@ -1,6 +1,7 @@
 ## exportPattern("^[^\\.]")
 useDynLib(mixstock)
 importFrom("lattice",xyplot)
+importFrom("plyr",ldply)
 export(MAXMARK,MAXSRC,addlabels.barplot,blockdiag,
        rdirichlet,mixstock.data,as.mixstock.data,
        sourcenames,marknames,mixnames,locnames,
@@ -27,6 +28,7 @@ S3method(print,mixstock.est)
 S3method(coef,mixstock.est)
 S3method(confint,mixstock.est)
 S3method(summary,mixstock.est)
+S3method(as.data.frame,mixstock.est)
 
 
 

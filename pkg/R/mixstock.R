@@ -358,7 +358,7 @@ plot.mixstock.est <- function(x,
     require("lattice")
     rnames <- colnames(x$fit$input.freq)
     mnames <- rownames(x$fit$input.freq)
-    nx <- dim(x$resamplist$theta)[1]
+    nx <- dim(x$resamplist$theta)[1]  ## number of samples
     nm <- nmix(x)
     nr <- nsource(x)
     ## little bit of a kluge to work with lattice --
@@ -2232,9 +2232,11 @@ function(sampsize=NULL,
   results
 }
 
-simmixstock2 <- function(sourcefreq, destmat,
-                         sourcesize,
-                         sourcesampsize, mixsampsize,
+simmixstock2 <- function(sourcefreq,       ## haplotype freqs in sources: dim (H,S)
+                         destmat,          ## frequencies of sources in mixed: dim(S,M)
+                         sourcesize,       ## relative source sizes: length S
+                         sourcesampsize,   ## 
+                         mixsampsize,
                          nmark, nsource, nmix,
                          rseed = NULL,
                          condense = TRUE) 
@@ -2251,12 +2253,14 @@ simmixstock2 <- function(sourcefreq, destmat,
       stop("must specify source  frequencies or number of marker classes")
     nmark <- nrow(sourcefreq)
   }
-  if (missing(sourcefreq)) sourcefreq=nmat(matrix(runif(nmark*nsource),nrow=nmark))
-  if (missing(destmat)) destmat=nmat(matrix(runif(nmix*nsource),nrow=nmix))
+  if (missing(sourcefreq)) sourcefreq <- nmat(matrix(runif(nmark*nsource),nrow=nmark,ncol=nsource))
+  if (missing(destmat)) destmat <- nmat(matrix(runif(nmix*nsource),ncol=nmix,nrow=nsource))
   if (missing(sourcesize)) sourcesize <- rep(1,nsource)
   sourcesamp.r <- apply(sourcefreq, 2, rmultinom,
                         n=1, size=sourcesampsize)
-  mix.freq <- nmat(t(t(sourcefreq)*sourcesize) %*% t(destmat))
+  mix.freq <- nmat(sweep(sourcefreq,2,sourcesize,"*") %*% destmat)
+  ## ?? did this work before ??
+  ## mix.freq <- nmat(t(t(sourcefreq)*sourcesize) %*% t(destmat))
   mixsamp.r <-  apply(mix.freq, 2, rmultinom,
                       n=1, size=mixsampsize)
   dimnames(sourcesamp.r) <- mixstock.dimnames(nmark, nsource)
@@ -2440,8 +2444,9 @@ as.mixstock.est.bugs <- function(object,data=NULL,time) {
       dimnames(X$fit$input.freq) <- list(mnames,rnames)
       dimnames(X$fit$sourcectr.freq) <- list(rnames,c(mnames,"Unknown"))
       dimnames(X$resample) <- list(NULL,
-                                   c(t(outer(mnames,rnames,paste,sep=".")),
-                                     t(outer(rnames,c(mnames,"Unk"),paste,sep="."))))
+                                   ## n.b. sims.matrix is ordered ALPHABETICALLY
+                                   c(outer(rnames,c(mnames,"Unk"),paste,sep="."),  ## 'div'
+                                     outer(mnames,rnames,paste,sep=".")))          ## 'theta'
       dimnames(X$resamplist$theta) <- list(NULL,mnames,rnames)
       dimnames(X$resamplist$div) <- list(NULL,rnames,c(mnames,"Unknown"))
     }
@@ -2525,4 +2530,19 @@ xyplot.mixstock.est <- function(x,data,...) {
   require(coda)
   m <- as.mcmc.list(lapply(split.data.frame(x$resample,x$resample.index),as.mcmc))
   xyplot(m,...)
+}
+
+as.data.frame.mixstock.est <- function(x,row.names, optional, ...) {
+    if (!missing(row.names)) warning("'row.names' argument ignored")
+    if (!missing(optional)) warning("'optional' argument ignored")
+    require(plyr)
+    ## unpack from $resample
+    mm <- (!is.null(x$resamplist$div)) ## ?? is this adequate?
+    if (!mm) stop("as.data.frame is only implemented for many-to-many fits")
+    coefs <- ldply(coef(x),function(x) if (is.null(x)) NULL else melt(x))
+    ci <- confint(x)
+    ci2 <- transform(as.data.frame(ci),
+                    Var1=gsub("\\..+$","",rownames(ci)),
+                    Var2=gsub("Unk","Unknown",gsub("^.+\\.","",rownames(ci))))
+    setNames(merge(coefs,ci2),c("to","from","type","est","lwr","upr"))
 }
