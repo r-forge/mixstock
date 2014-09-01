@@ -1,8 +1,14 @@
 ## exportPattern("^[^\\.]")
 useDynLib(mixstock)
-importFrom("lattice",xyplot)
+importFrom("lattice",xyplot,bwplot,lpoints,larrows)
 importFrom("plyr",ldply)
 importFrom("reshape2",melt)
+importFrom("coda",mcmc,as.mcmc,
+           as.mcmc.list,mcmc.list,raftery.diag,heidel.diag,gelman.diag,HPDinterval)
+importFrom("abind",abind)
+importFrom("plotrix",plotCI,staxlab)
+importFrom("R2WinBUGS",bugs)
+importFrom("R2jags",jags)
 export(MAXMARK,MAXSRC,addlabels.barplot,blockdiag,
        rdirichlet,mixstock.data,as.mixstock.data,
        sourcenames,marknames,mixnames,locnames,

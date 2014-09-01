@@ -7,7 +7,8 @@
   the negative log likelihood
 }
 \usage{
-loglik2.C(p, sourcesamp, mixsamp = NULL, verbose = FALSE, transf = c("full", "part", "none"), full = FALSE, cond = FALSE, debug = FALSE)
+loglik2.C(p, sourcesamp, mixsamp = NULL, verbose = FALSE,
+transf = c("full", "part", "none"), full = FALSE, cond = FALSE, debug = FALSE)
 }
 \arguments{
   \item{p}{parameter vector}

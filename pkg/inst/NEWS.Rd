@@ -4,6 +4,26 @@
 \title{mixstock News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 0.9.8 (1/9/2014)}{
+  \itemize{
+    \item don't use \code{cml.grad} any more (subtle bug in C code that
+    leads to errors under valgrind/segfaults under some CRAN tests)
+  }
+  \item small vignette cleanup
+}
+
+\section{CHANGES IN VERSION 0.9.7 (9/3/2014)}{
+  \itemize{
+    \item cleanup for CRAN
+  }
+
+}
+\section{CHANGES IN VERSION 0.9.6 (3/3/2014)}{
+  \itemize{
+    \item update Depends/Suggests/Imports
+    \item change vignette to knitr, update/clean up a bit
+  }
+}
 \section{CHANGES IN VERSION 0.9.5.3 (23/10/2012)}{
  \itemize{
    \item fix bugs in many-to-many confint() conversion, naming

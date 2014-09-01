@@ -13,7 +13,7 @@
 cml(x, start.type="lsolve", fuzz=0, bounds=1e-4,
 ndepfac=1000,method="L-BFGS-B",lower=NULL,upper=NULL,
 ndeps=NULL,
-control=NULL,debug=FALSE,transf="part",grad=cml.grad,...)
+control=NULL,debug=FALSE,transf="part",grad=NULL,...)
 MAXMARK
 MAXSRC
 }

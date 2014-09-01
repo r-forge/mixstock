@@ -1,11 +1,14 @@
-% \VignetteIndexEntry{basic examples of mixed stock analysis}
 \documentclass[11pt]{article}
+%\VignetteIndexEntry{basic examples of mixed stock analysis}
+%\VignettePackage{mixstock}
+%\VignetteDepends{ggplot2}
+%\VignetteEngine{knitr::knitr}
 \usepackage{palatino}
-\usepackage{lineno}
 \usepackage[american]{babel}
 \newcommand{\R}{{\sf R}}
 \newcommand{\Splus}{{\sf S-PLUS}}
 %\newcommand{\fixme}[1]{\textbf{FIXME: #1}}
+%% took out \usepackage{lineno}/\linenumbers: fragile with framed package
 \newcommand{\fixme}[1]{}
 \newcommand{\windows}{\textbf W?}
 \usepackage{url}
@@ -22,20 +25,21 @@
 \begin{document}
 \maketitle
 
-\linenumbers
-
-<<echo=FALSE>>=
+<<Rver,echo=FALSE>>=
 Rver <- paste(R.version$major,R.version$minor,sep=".")
-Rver <- "2.15.1"  ## override -- using devel version
-options(continue=" ")
 @ 
 
+<<knitopts,echo=FALSE,message=FALSE>>=
+library("knitr")
+opts_chunk$set(fig.width=6,fig.height=4)
+knit_hooks$set(base.figure=function() { par(las=1,bty="l") })
+@
 \section{Introduction}
 The \code{mixstock} package is a set of routines
 written in the \R\ language
-\cite{Rmanual} for doing mixed stock
+\citep{Rmanual} for doing mixed stock
 analysis using
-data on markers gathered
+data on haploid genetic markers gathered
 from source populations and from one or more mixed populations.
 The package was developed for
 analyzing mitochondrial DNA (mtDNA) markers from
@@ -54,11 +58,12 @@ definitely be helpful.  (Some familiarity with your
 computer's operating system, which is probably
 Microsoft Windows, is also assumed.)
 The statistical methods implemented in the
-package are described in \cite{bolk+03c} and
+package are described in \cite{bolk+03c}, \cite{OkuyamaBolker2005},
+\cite{Bolker+07}, and
 \cite{PellMasu01}.
 
 \textbf{This package is in the public domain (GNU General Public
-License), is \textcopyright 2008-2012 Ben Bolker and
+License), is \textcopyright 2008-2014 Ben Bolker and
 Toshinori Okuyama,
 and comes with NO WARRANTY.  Please suggest improvements to
 me (Ben Bolker) at {\tt bolker@mcmaster.ca}.}
@@ -80,7 +85,7 @@ go to \url{http://www.r-project.org} and navigate
 from there\footnote{if you are in
 the US and using Windows, you can go directly to
 \url{http://cran.us.r-project.org/bin/windows/base/}:
-you will need to download a file called \code{R-x.y.z-win32.exe}
+you will need to download a file called \code{R-x.y.z-win.exe}
 which will install \R\ for you, when executed; \code{x.y.z}
 stands for the current version of \R\ (\Sexpr{Rver} as of \today).
 Otherwise, see
@@ -90,20 +95,11 @@ web pages to find a version to install (if you are not
 using Unix and/or an expert, you will want to look for
 a \emph{binary} version of R).}
 
-The following installation instructions assume
-you are using a ``modern'' Microsoft Windows system
-(tested on 2000 and XP); it is possible to use
-\R, and the \code{mixstock} package, on other
-operating systems --- please contact the
-authors for more information. 
-(The package has been developed under Linux and runs under
-Windows; most of it should run under MacOS as well, but
-it is not as well supported and you will have to build
-the package from sources.   To run hierarchical models using
-WinBUGS, you need to have WINE set up on Linux; I'm not
-sure about MacOS.)
-The setup file is about 17M, and 
-\R\ takes up about 40M of disk space.
+The package has been developed under Linux and runs under
+Windows; it has been tested less thoroughly on MacOS.
+In general, the main compatibility/set-up issue will be
+running hierarchical models with WinBUGS or JAGS.
+The download file for \R\ is about 52Mb.
 If you are running an antivirus package that is configured to check
 the signatures of executable files before they run, make sure you turn
 it off or register the new files installed by \R\ before proceeding.
@@ -129,35 +125,47 @@ In general, if you want help on a particular command
 (e.g. \code{uml}) you can type a question mark
 followed by the command name (e.g. \code{?uml})
 
+You need to install the JAGS package (a separate
+software package that \code{mixstock} uses for some
+analyses).  Go to \href{http://sourceforge.net/projects/mcmc-jags/files/}{http://sourceforge.net/projects/mcmc-jags/files/}. The page should offer you a download compatible with your OS (look for ``Looking for the latest version? Download JAGS-...'')
+
+If you plan to use WinBUGS (an alternative to JAGS that runs on
+Windows, and with some difficulty on MacOS or Linux), you 
+will need to go to the \href{http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/contents.shtml}{BUGS web page} and follow the installation instructions.
+
 You will next need to install the \code{mixstock}
-package and two other auxiliary packages, over
-the WWW, from within \R\ (you will need to
+package and several other auxiliary packages, over
+the web, from within \R. You will need to
 maintain a connection to the internet for this
 piece, although it is also possible to do
-this step off-line).
-Within \R, at the command prompt, type the
-following commands:
-<<eval=FALSE>>=
-install.packages(c("mixstock","plotrix","coda","abind","R2WinBUGS"))
+this step off-line.  Within R, at the command prompt,
+type
+<<instpkgs,eval=FALSE>>=
+install.packages("mixstock")
 @ 
-
-In each case, answer \code{y} to whether you want to delete
-the source files; you shouldn't need them again.
+this should install the package and all of the packages
+it depends on. If R asks you whether 
+you want to delete the source files, answer \code{y};
+you shouldn't need them again.
 
 (If you don't have a convenient internet connection,
-you can also download the .zip files corresponding
-to the different packages and install them by going
+you can download the files corresponding
+to \code{mixstock} and all of its dependent
+packages and install them by going
 to the \code{Packages} menu within R and choosing
-\code{Install from local zip file}.)
+\code{Install from local zip file}.
+However, you will need compilation tools installed --- see
+the documentation or FAQ for using R with your operating system.)
 
 \section{Loading the \code{mixstock} package and reading  in data}
+
 Start every session with the \code{mixstock} package by
 typing 
-<<>>=
+<<loadpkg>>=
 library(mixstock)
 @ 
 at the command prompt;
-this loads the \code{mixstock} and auxiliary packages.
+this loads the \code{mixstock} package.
 
 The package can read plain text data files that are separated by white
 space (spaces and/or tabs) or commas.  If your data are in Microsoft
@@ -226,13 +234,13 @@ For example, if you had a file
 with space-separated data called
 \code{mydata.dat}, you could it read it in 
 by typing
-<<eval=FALSE>>=
+<<readdata1,eval=FALSE>>=
 mydata = read.table("mydata.dat",header=TRUE)
 @ 
 and if you
 have a comma-separated file called
 \code{mydata.csv} you can use
-<<eval=FALSE>>=
+<<readdata2,eval=FALSE>>=
 mydata = read.csv("mydata.csv")
 @ 
 (1) \code{header=TRUE} is required with
@@ -251,26 +259,25 @@ If you have your own data you can read it in
 now and follow along, or you can use the
 \code{lahanas98raw}
 data set that comes with the package
-\cite{Laha+98}:
-<<>>=
-data(lahanas98raw)
+\citep{Laha+98}:
+<<lahanas98raw>>=
 mydata = lahanas98raw
 @ 
 
 To make sure that everything came out OK, type
 the name of the variable alone at the command prompt: e.g.
-<<eval=FALSE>>=
+<<printdata,eval=FALSE>>=
 mydata
 @ 
 to print out the data, or
-<<>>=
+<<head>>=
 head(mydata)
 @ 
 to print out just the first few lines, as shown above.
 
 Next, use the \code{as.mixstock.data} command
 to convert your data to a form that the package can use:
-<<>>=
+<<convert1>>=
 mydata = as.mixstock.data(mydata)
 @ 
 
@@ -278,16 +285,11 @@ Once your data are converted in this way,
 you can use \code{plot(mydata)} to
 produce a summary plot of the data
 (Figure~\ref{fig:data1}).
-\begin{figure}
-<<echo=FALSE,fig=TRUE>>=
+
+%% need short caption here 
+<<data1,echo=FALSE,fig.scap="Basic plot of turtle mtDNA haplotype data",fig.cap="Basic plot of turtle mtDNA haplotype data, using \\code{plot(mydata,mix.off=2)} (\\code{mix.off=2} leaves a slightly larger space between the rookery and mixed stock data)",base.figure=TRUE>>=
 plot(mydata,mix.off=2)
 @
-\caption{Basic plot of turtle mtDNA haplotype data,
-using \code{plot(mydata,mix.off=2)}
-(\code{mix.off=2} leaves a slightly larger space
-between the rookery and mixed stock data)}
-\label{fig:data1}
-\end{figure}
 
 %\begin{figure}
 <<echo=FALSE,eval=FALSE>>=
@@ -329,7 +331,7 @@ together all haplotypes that are found only in a single rookery and
 the mixed population (distinguishing among such haplotypes provides no
 extra information in our analyses, and may slow down estimation).
 You can do this by typing
-<<>>=
+<<condense>>=
 mydata = markfreq.condense(mydata)
 @ 
 (To examine the condensed form of the data,
@@ -339,31 +341,17 @@ just the first few lines, or \verb+plot(mydata)+ to see
 the graphical summary [Figure~\ref{fig:condensed}].)
 
 Some data are already entered in the package
-in the condensed format; you can access them
-using the \code{data()} command.
-<<>>=
-data(lahanas98)
-@ 
-makes the haplotype frequency data from Lahanas et al. 1998
-\cite{Laha+98} available as variable \code{lahanas98}, while
-<<>>=
-data(bolten98)
-@ 
-makes the loggerhead data from Bolten et al. 1998
-\cite{Bolt+98} available as \code{bolten98},
-already converted and condensed: \code{bolten98raw}
-gives you the raw table.
+in the condensed format; \code{lahanas98} 
+is the green turtle haplotype frequency data from \cite{Laha+98}, while
+\code{bolten98}
+is the loggerhead haplotype frequency data from \cite{Bolt+98}.
+Both of these data sets are 
+already converted and condensed: \code{lahanas98raw} and \code{bolten98raw}
+give you the corresponding raw data tables.
 
-\begin{figure}
-<<echo=FALSE,fig=TRUE>>=
+<<condensed,echo=FALSE,fig.scap="Condensed haplotype data from Lahanas 1998",fig.cap="Condensed haplotype data from Lahanas 1998 (\\code{plot(lahanas98, mix.off=2, leg.space=0.4)}; \\code{leg.space=0.4} leaves more room for the legend).">>=
 plot(lahanas98,mix.off=2,leg.space=0.4)
 @
-\caption{Condensed haplotype data from Lahanas 1998
-(\code{plot(lahanas98, mix.off=2, leg.space=0.4)};
-\code{leg.space=0.4} leaves more room
-for the legend)}
-\label{fig:condensed}
-\end{figure}
 
 \section{Stock analysis}
 You can use the \code{mixstock} package to
@@ -376,7 +364,7 @@ You can do standard conditional maximum likelihood
 If you want to save the results, you can save them
 as a variable that you can then print, plot, etc.
 (Figure~\ref{fig:cml1})
-<<>>=
+<<cml0>>=
 mydata.cml = cml(mydata)
 mydata.cml
 @ 
@@ -389,18 +377,15 @@ to print out.
 Plotting the data produces a simple plot
 of the estimated contributions from each
 source (with no error bars): see Figure~\ref{fig:cml1}.
-<<eval=FALSE>>=
+<<cmlplot1,eval=FALSE>>=
 plot(mydata.cml)
 @ 
 
-\begin{figure}
-<<fig=TRUE,echo=FALSE>>=
+
+<<cml1,echo=FALSE,fig.scap="CML estimates for Lahanas 1998 data",fig.cap="CML estimates for Lahanas 1998 data; \\code{plot(mydata.cml)}",base.figure=TRUE,fig.width=8>>=
 plot(mydata.cml)
 @ 
-\caption{CML estimates for Lahanas 1998 data;
-\code{plot(mydata.cml)}}
-\label{fig:cml1}
-\end{figure}
+
 When you print CML results, \R\ will tell you there is no estimate for
 the rookery frequencies, because CML assumes that the true rookery
 frequencies are equal to the sample rookery frequencies, rather than
@@ -415,9 +400,9 @@ for the vertical axis, use
 
 Standard unconditional maximum likelihood analysis (UML)
 takes a little longer, but is equally straightforward
-\cite{SWT90}:
+\citep{SWT90}:
 
-<<>>=
+<<uml0>>=
 mydata.uml = uml(mydata)
 @ 
 
@@ -463,34 +448,30 @@ on my laptop.}
 (You can ignore warnings about \code{singular matrix, returning
 equal contribs}, \code{Error in qr.solve}, etc..)
 You can find out the results by typing
-<<>>=
+<<confint1>>=
 confint(mydata.umlboot)
 @ 
 
-\begin{figure}
-<<fig=TRUE,echo=FALSE>>=
-plot(mydata.umlboot)
+<<umlboot,echo=FALSE,fig.scap="UML with bootstrap CI",fig.cap="UML estimates with bootstrap confidence limits for Lahanas 1998 data: \\code{plot(mydata.umlboot)}",base.figure=TRUE,fig.width=8>>=
+plot(mydata.umlboot,ylim=c(0,1))
 @ 
-\caption{UML estimates with bootstrap confidence limits for Lahanas 1998 data: \code{plot(mydata.umlboot)}}
-\label{fig:umlboot}
-\end{figure}
 
 \subsection{Markov Chain Monte Carlo estimation}
-<<eval=FALSE>>=
+<<runmcmc,eval=FALSE>>=
 mydata.mcmc = tmcmc(mydata)
 @ 
-<<echo=FALSE>>=
+<<getmcmcdata,echo=FALSE>>=
 if (!file.exists("mcmc.RData")) {
   mydata.mcmc <- tmcmc(mydata)
   save("mydata.mcmc",file="mcmc.RData",compress=TRUE)
 } else load("mcmc.RData")
 @ 
 
-<<>>=
+<<confint2>>=
 mydata.mcmc
 confint(mydata.mcmc)
 @ 
-<<eval=FALSE>>=
+<<plot0,eval=FALSE>>=
 plot(mydata.mcmc)
 @ 
 
@@ -501,8 +482,11 @@ in rookeries is not saved --- it tends to be voluminous ---
 and so this does not show up in the MCMC results.)
 
 \begin{figure}
-<<fig=TRUE,echo=FALSE>>=
-plot(mydata.mcmc)
+<<plot_mcmc,echo=FALSE,base.figure=TRUE,message=FALSE,fig.width=8,base.figure=TRUE>>=
+plot(mydata.mcmc,ylim=c(0,1),axes=FALSE)
+axis(side=1,at=1:mydata.mcmc$R,labels=gsub("^contrib\\.","",
+                               names(coef(mydata.mcmc)$input.freq)))
+axis(side=2)
 @ 
 \caption{MCMC estimates with confidence limits for Lahanas 1998 data}
 \label{fig:mcmc1}
@@ -582,7 +566,7 @@ variance is small relative to within-chain variance.
 The general rule of thumb is that the criterion should
 be below 1.2 for all parameters in order for the chain
 to be judged to have converged properly.
-\cite{Gelm+96}.
+\citep{Gelm+96}.
 
 \section{Hierarchical models}
 
@@ -621,9 +605,9 @@ of multiple-mixed-stock systems.  At its simplest,
 it simply generates random uniform values for
 the haplotype frequencies in each rookery
 and the proportional contributions of each
-rookery to each mixed stock:
+rookery to each mixed stock (ref Figure~\ref{fig:mmplot0}).:
 
-<<fig=TRUE>>=
+<<plot_sim1,fig.keep="none">>=
 Z = simmixstock2(nsource=4,nmark=5,nmix=3,
                  sourcesize=c(4,2,1,1),
                  sourcesampsize=rep(25,4),
@@ -631,6 +615,10 @@ Z = simmixstock2(nsource=4,nmark=5,nmix=3,
 Z
 plot(Z)
 @ 
+
+<<mmplot0,fig.cap="Simulated multiple-mixed-stock data",base.figure=TRUE,echo=FALSE,fig.scap="multiple-mixed-stock simulation">>=
+plot(Z)
+@
 
 Now try to fit this via \code{mm.wbugs}:
 <<echo=FALSE,cache=TRUE>>=
@@ -656,7 +644,7 @@ Zfit3 <- mm.wbugs(Z,sourcesize=c(4,2,1,1),bugs.code="BB",n.iter=1000,pkg="JAGS")
 @ 
 
 Or, keeping the run in BUGS format for diagnostic purposes:
-<<eval=FALSE>>=
+<<bugsfit2,eval=FALSE>>=
 Zfit0 = mm.wbugs(Z,sourcesize=c(4,2,1,1),returntype="bugs")
 @ 
 
@@ -711,35 +699,37 @@ plot(Zfit0)
 @ 
 
 Plot CODA diagnostics (plot not shown):
-<<>>=
+<<plot_coda,fig.keep="none",eval=FALSE>>=
 plot(as.mcmc.bugs(Zfit0))
 @ 
+(the \code{plotMCMC} package generates prettier diagnostic output).
 
 Plot results:
-<<fig=TRUE>>=
-print(plot(Zfit))
+<<plot_res1>>=
+plot(Zfit)
 @ 
 
 Source-centric form:
-<<fig=TRUE>>=
-print(plot(Zfit,sourcectr=TRUE))
+<<plot_res2>>=
+plot(Zfit,sourcectr=TRUE)
 @ 
 
+\newpage
 Summary/confidence intervals:
-<<>>=
+<<sumZfit>>=
 summary(Zfit)
 @ 
 
 Possibly prettier/do it yourself with ggplot:
-<<fig=TRUE>>=
+<<plot_g2,message=FALSE,tidy=FALSE,fig.height=3>>=
 Zfit.d <- as.data.frame(Zfit)
-require(ggplot2)
-require(grid)
+library(ggplot2)
+library(grid)
 theme_set(theme_bw())
 zmargin <- theme(panel.margin=unit(0,"lines"))
-print(ggplot(subset(Zfit.d,type=="input.freq"),
+ggplot(subset(Zfit.d,type=="input.freq"),
        aes(x=from,y=est,ymin=lwr,ymax=upr))+
-    geom_pointrange()+facet_wrap(~to)+zmargin)
+    geom_pointrange()+facet_wrap(~to)+zmargin
 @ 
 
 \section{Quick start}
@@ -753,17 +743,14 @@ from there to the base package; pick
 your operating system; download the setup 
 program; and run the setup program).
 }
+\item{Download and install JAGS from \href{http://sourceforge.net/projects/mcmc-jags/files/}{http://sourceforge.net/projects/mcmc-jags/files/}.}
 \item{Start \R.}
 \item{From within \R,
 download and install the \code{mixstock}
-package and auxiliary packages:
-<<eval=FALSE>>=
+package --- this should automatically install all of the
+dependent packages as well.
+<<quick_install,eval=FALSE>>=
 install.packages("mixstock")
-install.packages("plotrix")
-install.packages("coda")
-install.packages("abind")
-install.packages("R2WinBUGS") ## or 
-install.packages("R2jags")
 @ 
 (This installation procedure needs to be done
 only once, although the \code{library} command
@@ -772,12 +759,12 @@ below, loading the package, needs to be done for every new R session.)
 \item{Load the package: \code{library(mixstock)}}
 \item{Load data from a comma-separated value (CSV) file,
 convert to proper format, and condense haplotypes:
-<<eval=FALSE>>=
+<<quick_condense,eval=FALSE>>=
 mydata = hapfreq.condense(as.mixstock.data(read.csv("myfile.dat")))
 @
 } 
 \item{analyze, e.g:
-<<eval=FALSE>>=
+<<quick_analyze,eval=FALSE>>=
 mydata.mcmc = tmcmc(mydata)
 mydata.mcmc
 intervals(mydata.mcmc)

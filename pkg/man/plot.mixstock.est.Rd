@@ -12,7 +12,8 @@
    markcolors = rainbow(x$H),
    alength=0.25,
    aunits="inches",
-   abbrev, level=0.95, \dots)
+   abbrev, level=0.95,
+   axes=TRUE, \dots)
 }
 \arguments{
   \item{x}{mixstock estimate}
@@ -27,6 +28,7 @@
     plots? Default if TRUE is 3 characters, but may also be an integer
     specifying the number of characters}
   \item{level}{confidence level}
+  \item{axes}{(logical) plot axes?}
   \item{\dots}{other arguments to \code{\link{barplot}}}
 }
 \note{

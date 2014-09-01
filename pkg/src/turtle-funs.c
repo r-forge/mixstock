@@ -11,7 +11,8 @@
 #define MAXVECDIM 50000  /* product */
 
 void rem(double * x, int * n) {
-  /* argh! this should be easy ... fixed stupid stupid bugs */
+    /* compute 'fraction remaining' */
+    /* argh! this should be easy ... fixed stupid stupid bugs */
   int i;
   double tmp1,tmp2;
   
@@ -59,6 +60,7 @@ void q_to_p2(double * q, int *n, int *contin) {
   double rem;
   int i;
 
+  /* Rprintf("q_to_p2: n=%d\n",*n); */
   if (*contin==1) {
     /*  fprintf(stderr,"q_to_p: transforming variables\n"); */
     for (i=0; i<(*n-1); i++)
@@ -73,59 +75,64 @@ void q_to_p2(double * q, int *n, int *contin) {
   q[*n-1] = rem;
 }
 
-void dcmat(double *p, double *xmat, int *len,
-	   int *debug) {
-  int r,c,k,nrow,ncol;
-  int contin=0;
-  /* how big must this be? how big can it be? */
-  double remmat[MAXMARK][MAXMARK1];
-  double tmpsum;
-  nrow=*len+1;
-  ncol = *len;
-  /* fill in remmat with x[-z] */
-  for (r=0; r<(nrow-1); r++) {
-    for (c=0, k=0; c<(ncol/*-1 */); c++, k++) {
-      if (k==r) k++; /* skip self */
-      remmat[r][c] = p[k];
-    }
-    q_to_p2(remmat[r],len,&contin);
-    rem(remmat[r],len);
-  }
-  if (*debug==1) {
+void dcmat(double *p, double *xmat, int *len, int *debug) {
+    int r,c,k,nrow,ncol;
+    int contin=0;
+    /* how big must this be? how big can it be? */
+    double remmat[MAXMARK][MAXMARK1];
+    double tmpsum;
+    nrow = *len+1;
+    ncol = *len;
+    /* Rprintf("dcmat\n"); */
+    /* Rprintf("dcmat: len=%d\n",*len); */
+    /* fill in remmat with x[-z] */
     for (r=0; r<(nrow-1); r++) {
-      for (c=0; c<ncol; c++)
-	REprintf("%1.3f ",remmat[r][c]);
-      REprintf("\n");
+	for (c=0, k=0; c<(ncol/*-1 */); c++, k++) {
+	    if (k==r) k++; /* skip self */
+	    remmat[r][c] = p[k];
+	}
+	/* translate remmat from transformed probs to probs */
+	/* Rprintf("calling q_to_p2: %d\n",*len); */
+	q_to_p2(remmat[r],len,&contin);
+	/* translate to 'fraction remaining' */
+	rem(remmat[r],len);
     }
-  }
-  /* fill in lower triangle */
-  for (r=1; r<(nrow-1); r++)
-    for (c=0; c<r; c++) {
-      /*      xmat[r+c*(nrow)] = -p[r]*remmat[r-1][c]; */
-      /* have to transpose remmat here */
-      xmat[r+c*(nrow)] = -p[r]*remmat[c][r-1];
+    if (*debug==1) {
+	for (r=0; r<(nrow-1); r++) {
+	    for (c=0; c<ncol; c++)
+		REprintf("%1.3f ",remmat[r][c]);
+	    REprintf("\n");
+	}
     }
-  if (*debug==1) {
-  for (r=0; r<(nrow-1); r++) {
+    /* fill in lower triangle */
+    for (r=1; r<(nrow-1); r++)
+	for (c=0; c<r; c++) {
+	    /*      xmat[r+c*(nrow)] = -p[r]*remmat[r-1][c]; */
+	    /* have to transpose remmat here */
+	    xmat[r+c*(nrow)] = -p[r]*remmat[c][r-1];
+	}
+    if (*debug==1) {
+	for (r=0; r<(nrow-1); r++) {
+	    for (c=0; c<ncol; c++)
+		REprintf("%1.3f ",xmat[r+c*nrow]);
+	    REprintf("\n");
+	}
+    }
+    /* fill in diagonal */
     for (c=0; c<ncol; c++)
-      REprintf("%1.3f ",xmat[r+c*nrow]);
-    REprintf("\n");
-  }
-  }
-  /* fill in diagonal */
-  for (c=0; c<ncol; c++)
-    remmat[0][c] = p[c];
-  q_to_p2(remmat[0],len,&contin);
-  rem(remmat[0],len);
-  for (r=0; r<(nrow-1); r++)
-    xmat[r+r*(nrow)] = remmat[0][r];
-  /* fill in last row */
-  for (c=0; c<ncol; c++) {
-    for (tmpsum=0, r=0; r<nrow-1; r++)
-      tmpsum-=xmat[r+c*(nrow)];
-    xmat[(nrow-1)+c*(nrow)] = tmpsum;
-  }
-  }
+	remmat[0][c] = p[c];
+    /* Rprintf("calling q_to_p2 2: %d\n",*len); */
+    q_to_p2(remmat[0],len,&contin);
+    rem(remmat[0],len);
+    for (r=0; r<(nrow-1); r++)
+	xmat[r+r*(nrow)] = remmat[0][r];
+    /* fill in last row */
+    for (c=0; c<ncol; c++) {
+	for (tmpsum=0, r=0; r<nrow-1; r++)
+	    tmpsum-=xmat[r+c*(nrow)];
+	xmat[(nrow-1)+c*(nrow)] = tmpsum;
+    }
+}
   
 void p_to_q(double * p, int n) {
   double rem[MAXSRC];

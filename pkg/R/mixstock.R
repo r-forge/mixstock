@@ -147,10 +147,10 @@ as.mixstock.est <- function(object) {
 mixstock.est <- function(fit,resample=NULL,
                          resample.index=NULL,
                          data=NULL,em=FALSE,
-                       sourcesamp=NULL,mixsamp=NULL,R=NULL,H=NULL,M=1,
-                       transf="full",method="unknown",
-                       boot.method="none",
-                       boot.data=NULL,GR=NULL,prior=NULL) {
+                         sourcesamp=NULL,mixsamp=NULL,R=NULL,H=NULL,M=1,
+                         transf="full",method="unknown",
+                         boot.method="none",
+                         boot.data=NULL,GR=NULL,prior=NULL) {
   if (is.null(sourcesamp))
     if (!is.null(data))
       sourcesamp <- data$sourcesamp
@@ -349,13 +349,13 @@ plot.mixstock.est <- function(x,
                               aunits="inches",
                               abbrev,
                               level=0.95,
+                              axes=TRUE,
                               ## scales=list(),
                               ## lattice.args=list(),
                               ## layout=NULL,
                               ...) {
   mm <- nmix(x)>1
   if (mm) {
-    require("lattice")
     rnames <- colnames(x$fit$input.freq)
     mnames <- rownames(x$fit$input.freq)
     nx <- dim(x$resamplist$theta)[1]  ## number of samples
@@ -405,14 +405,20 @@ plot.mixstock.est <- function(x,
     ifreq <- vals$input.freq
     ci <- confint(x,level=level)
     if (is.null(ci)) {
-      plot(1:x$R,ifreq,axes=FALSE,xlab="Source",ylab=contrib.lab,...)
+      plot(1:x$R,ifreq,
+           axes=FALSE,
+           xlab="Source",
+           ylab=contrib.lab,...)
     } else {
-      require("plotrix")
-      suppressWarnings(plotCI(1:x$R,y=ifreq,li=ci[,1],ui=ci[,2],axes=FALSE,
-                              xlab="Source",ylab=contrib.lab,...))
+      suppressWarnings(plotCI(1:x$R,y=ifreq,li=ci[,1],ui=ci[,2],
+                              axes=FALSE,
+                              xlab="Source",
+                              ylab=contrib.lab,...))
     }
-    axis(side=2)
-    axis(side=1,at=1:x$R,labels=names(ifreq))
+    if (axes) {
+        axis(side=2)
+        axis(side=1,at=1:x$R,labels=names(ifreq))
+    }
     if (plot.freqs) {
       if (x$method=="cml")
         warning("CML estimate, no source frequencies estimated")
@@ -1071,7 +1077,6 @@ markfreq.condense <- function(sourcesamp=NULL,mixsamp=NULL,debug=FALSE,
 
 ## run Heidelberger & Welch tests, report if all passed
 hwdiag.check <- function(x,verbose=FALSE) {
-  require("coda")
   mc <- mcmc(x)
   d <- heidel.diag(mc)
   if (verbose) print(d)
@@ -1207,7 +1212,6 @@ calc.mult.RL <- function(data,n=50,debug=FALSE,verbose=FALSE) {
   
 calc.GR <- function(data,tot=20000,burn=1,verbose=FALSE,rseed=1001,
                        chainfrac=NULL) {
-  require("coda")
   mixsamp <- data$mixsamp
   sourcesamp <- data$sourcesamp
   R <- ncol(sourcesamp)
@@ -1232,7 +1236,6 @@ calc.GR <- function(data,tot=20000,burn=1,verbose=FALSE,rseed=1001,
 }
 
 calc.mult.GR <- function(data,n=10,tot=20000,burn=1,verbose=FALSE) {
-  require("coda")   ## CODA instead of boa (why??)
   ## mixsamp <- data$mixsamp
   sourcesamp <- data$sourcesamp
   R <- ncol(sourcesamp)
@@ -1473,7 +1476,7 @@ cml <- function(x,start.type="lsolve",
                 control=NULL,
                 debug=FALSE,
                 transf="part",
-                grad=cml.grad,
+                grad=NULL,  ## was cml.grad
                 ...) {
   ## find contribs (by CML) that give MLE
   ## assume x is a list with elements sourcesamp, mixsamp
@@ -1549,7 +1552,8 @@ dcmat.a <- function(x,debug=FALSE) {
             as.integer(debug),PACKAGE="mixstock")[[2]],
          nrow=n+1)
 }
-     
+
+## BUGGY??
 cml.grad <- function(p,
                      sourcefreq,
                      data,
@@ -1557,7 +1561,7 @@ cml.grad <- function(p,
                      verbose=FALSE,
                      fulllik=NULL,
                      debug=FALSE) {
-  ## sourcefreq  is transformed source frequencies
+  ## sourcefreq should be _transformed_ source frequencies
   R <- ncol(sourcefreq)
   H <- nrow(sourcefreq)+1
   c0 <- unpackval(c(p,sourcefreq),transf=transf,R=R,H=H)
@@ -1879,7 +1883,6 @@ genboot <- function(x,method="cml",
 
 ## expand mixsamp data
 expand.bugs.data <- function (mixsamp) {
-  require("abind")
   if (!is.null(dim(mixsamp))) {  ## matrix or data frame
     ## recursive call to expand.bugs.data
     Tm <- colSums(mixsamp)
@@ -1912,7 +1915,6 @@ pm.wbugs <- function(x,
                      n.thin=max(1,floor(n.chains*(n.iter-n.burnin)/1000)),
                      ...) {
   pm.bugscode <- system.file(package = "mixstock", "bugs", "pellamasuda.bug")
-  require("R2WinBUGS")
   ## variables repeated at end of line are codetools kluges
   sourcesamp <- t(x$sourcesamp); sourcesamp
   mixsamp <- expand.bugs.data(x$mixsamp); mixsamp
@@ -2006,7 +2008,6 @@ mm.wbugs <- function(x,
                      working.directory,...) {
   if (missing(working.directory)) working.directory <- tempdir()
   pkg <- match.arg(pkg)
-  switch(pkg,WinBUGS=require("R2WinBUGS"),JAGS=require("R2jags"))
   inittype <- match.arg(inittype)
   returntype <- match.arg(returntype)
   bugs.code <- match.arg(bugs.code)
@@ -2501,7 +2502,8 @@ nmark <- function(object) {
   object
 }
 
-## FIXME: define for other data types
+##  NOTE: S3 method for coefplot2 package, but we don't define
+## default to avoid dependence on coefplot2
 coeftab.mixstock.est <- function(object,clevel=c(0.5,0.95),...)  {
   ## loc should be a function with an na.rm argument (mean,median)
   ## FIXME:
@@ -2527,7 +2529,6 @@ coeftab.mixstock.est <- function(object,clevel=c(0.5,0.95),...)  {
 ## designed for MCMC only
 xyplot.mixstock.est <- function(x,data,...) {
   ## convert allchains back into an mcmc list
-  require(coda)
   m <- as.mcmc.list(lapply(split.data.frame(x$resample,x$resample.index),as.mcmc))
   xyplot(m,...)
 }
@@ -2535,8 +2536,6 @@ xyplot.mixstock.est <- function(x,data,...) {
 as.data.frame.mixstock.est <- function(x,row.names, optional, ...) {
     if (!missing(row.names)) warning("'row.names' argument ignored")
     if (!missing(optional)) warning("'optional' argument ignored")
-    require(plyr)
-    require(reshape2)
     ## unpack from $resample
     mm <- (!is.null(x$resamplist$div)) ## ?? is this adequate?
     if (!mm) stop("as.data.frame is only implemented for many-to-many fits")

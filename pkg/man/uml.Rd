@@ -11,7 +11,8 @@
 }
 \usage{
 uml(x, method="direct",optmethod="L-BFGS-B",...)
-uml.ds(x,grad=uml.grad,start.type="lsolve",fuzz=0,bounds=1e-4,ndepfac=1000,method="L-BFGS-B",debug=FALSE,control=NULL,
+uml.ds(x,grad=uml.grad,start.type="lsolve",fuzz=0,bounds=1e-4,
+ndepfac=1000,method="L-BFGS-B",debug=FALSE,control=NULL,
 transf=c("part","full","none"),...)
 uml.em(x,prec=1e-8,prior=1)
 }
